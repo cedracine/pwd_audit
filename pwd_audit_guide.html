@@ -1,0 +1,1432 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Password Audit — Guide Visuel</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;1,9..144,300&display=swap" rel="stylesheet">
+<style>
+
+  :root {
+    --bg:        #0e1117;
+    --surface:   #161b27;
+    --surface2:  #1e2535;
+    --border:    #2a3045;
+    --accent:    #4af0b4;
+    --accent2:   #f0b44a;
+    --danger:    #f04a6a;
+    --muted:     #6b7a99;
+    --text:      #dde3f0;
+    --text2:     #a8b4cc;
+    --chrome:    #4a9af0;
+    --firefox:   #f06a4a;
+    --safari:    #4af0e0;
+    --opera:     #f04a4a;
+    --vivaldi:   #c04af0;
+    --edge:      #4a7af0;
+    --proton:    #7b5af0;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    font-size: 14px;
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  /* ── GRAIN OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── LAYOUT ── */
+  .wrap {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 48px 24px 80px;
+    position: relative; z-index: 1;
+  }
+
+  /* ── HEADER ── */
+  header {
+    text-align: center;
+    margin-bottom: 64px;
+    animation: fadeUp .6s ease both;
+  }
+  .header-tag {
+    display: inline-block;
+    font-size: 11px;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    padding: 3px 12px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+    opacity: .8;
+  }
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(32px, 6vw, 56px);
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.1;
+    letter-spacing: -.02em;
+    margin-bottom: 16px;
+  }
+  h1 span { color: var(--accent); }
+  .subtitle {
+    color: var(--muted);
+    font-size: 13px;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  /* ── SECTION TITLES ── */
+  .section-label {
+    font-size: 11px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px 28px;
+    margin-bottom: 16px;
+    transition: border-color .2s;
+  }
+  .card:hover { border-color: var(--accent); }
+  .card-title {
+    font-family: 'Fraunces', serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .card p { color: var(--text2); margin-bottom: 6px; }
+
+  /* ── STEP CARDS ── */
+  .steps { counter-reset: step; }
+  .step {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px 28px 28px 80px;
+    margin-bottom: 12px;
+    position: relative;
+    transition: all .2s;
+    animation: fadeUp .5s ease both;
+  }
+  .step:nth-child(1) { animation-delay: .05s; }
+  .step:nth-child(2) { animation-delay: .10s; }
+  .step:nth-child(3) { animation-delay: .15s; }
+  .step:nth-child(4) { animation-delay: .20s; }
+  .step:nth-child(5) { animation-delay: .25s; }
+  .step:hover { border-color: var(--accent); transform: translateX(4px); }
+  .step::before {
+    counter-increment: step;
+    content: counter(step);
+    position: absolute;
+    left: 24px; top: 24px;
+    width: 36px; height: 36px;
+    background: var(--accent);
+    color: var(--bg);
+    font-family: 'Fraunces', serif;
+    font-size: 18px;
+    font-weight: 700;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .step h3 {
+    font-family: 'Fraunces', serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+  .step p { color: var(--text2); margin-bottom: 4px; }
+  .step .os-badges {
+    display: flex;
+    gap: 6px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+  }
+  .badge {
+    font-size: 10px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 4px;
+    border: 1px solid;
+  }
+  .badge.win { color: #4a9af0; border-color: #4a9af050; background: #4a9af010; }
+  .badge.mac { color: #f0b44a; border-color: #f0b44a50; background: #f0b44a10; }
+  .badge.linux { color: #4af0b4; border-color: #4af0b450; background: #4af0b410; }
+  .badge.raspi { color: #f06a4a; border-color: #f06a4a50; background: #f06a4a10; }
+
+  /* ── CODE BLOCKS ── */
+  .code-block {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin: 10px 0;
+    font-size: 12px;
+    color: var(--accent);
+    overflow-x: auto;
+    white-space: pre;
+  }
+  .code-block .comment { color: var(--muted); }
+  .code-block .cmd { color: var(--accent2); }
+
+  /* ── BROWSER GRID ── */
+  .browser-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 12px;
+    margin-top: 8px;
+  }
+  .browser-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 18px;
+    transition: all .2s;
+  }
+  .browser-card:hover { transform: translateY(-2px); border-color: var(--accent); }
+  .browser-name {
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .browser-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .browser-path {
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+  .browser-path code {
+    color: var(--accent2);
+    background: var(--surface);
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-size: 10px;
+  }
+  .browser-note {
+    margin-top: 6px;
+    font-size: 10px;
+    color: var(--muted);
+    font-style: italic;
+    padding-top: 6px;
+    border-top: 1px solid var(--border);
+  }
+  .csv-cols {
+    font-size: 10px;
+    color: var(--accent);
+    margin-top: 6px;
+    background: var(--surface);
+    padding: 4px 8px;
+    border-radius: 4px;
+    letter-spacing: .04em;
+  }
+
+  /* ── PYTHON INSTALL ── */
+  .install-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 8px;
+  }
+  @media (max-width: 600px) { .install-grid { grid-template-columns: 1fr; } }
+  .install-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+  }
+  .install-card h4 {
+    font-size: 12px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--accent2);
+    margin-bottom: 10px;
+  }
+
+  /* ── PROTON IMPORT TABLE ── */
+  .proton-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    margin-top: 10px;
+  }
+  .proton-table th {
+    background: var(--surface2);
+    color: var(--accent);
+    padding: 8px 12px;
+    text-align: left;
+    font-size: 10px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    border-bottom: 2px solid var(--border);
+  }
+  .proton-table td {
+    padding: 8px 12px;
+    color: var(--text2);
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  .proton-table tr:hover td { background: var(--surface2); }
+  .col-name { color: var(--accent); font-weight: 500; }
+  .col-req { color: var(--danger); font-size: 10px; }
+  .col-opt { color: var(--muted); font-size: 10px; }
+
+  /* ── VAULT SECTION ── */
+  .vault-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+    margin-top: 8px;
+  }
+  .vault-card {
+    border-radius: 10px;
+    padding: 16px;
+    border: 1px solid;
+  }
+  .vault-card.red    { border-color: #f04a6a44; background: #f04a6a0a; }
+  .vault-card.yellow { border-color: #f0b44a44; background: #f0b44a0a; }
+  .vault-card.green  { border-color: #4af0b444; background: #4af0b40a; }
+  .vault-card.blue   { border-color: #4a9af044; background: #4a9af00a; }
+  .vault-card.grey   { border-color: var(--border); background: var(--surface2); }
+  .vault-emoji { font-size: 22px; margin-bottom: 6px; }
+  .vault-title { font-family: 'Fraunces', serif; font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+  .vault-desc  { font-size: 11px; color: var(--muted); line-height: 1.5; }
+
+  /* ── WARN/TIP BOXES ── */
+  .tip, .warn, .danger-box {
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin: 12px 0;
+    font-size: 12px;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .tip    { background: #4af0b410; border-left: 3px solid var(--accent); color: var(--text2); }
+  .warn   { background: #f0b44a10; border-left: 3px solid var(--accent2); color: var(--text2); }
+  .danger-box { background: #f04a6a10; border-left: 3px solid var(--danger); color: var(--text2); }
+  .tip-icon, .warn-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+
+  /* ── SECTION DIVIDER ── */
+  section { margin-bottom: 56px; }
+
+  /* ── FAQ ACCORDION ── */
+  .faq-item {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 8px;
+    overflow: hidden;
+  }
+  .faq-q {
+    width: 100%;
+    background: var(--surface);
+    border: none;
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    padding: 16px 20px;
+    text-align: left;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background .2s;
+  }
+  .faq-q:hover { background: var(--surface2); }
+  .faq-q .arrow { color: var(--accent); transition: transform .2s; font-size: 16px; }
+  .faq-q.open .arrow { transform: rotate(90deg); }
+  .faq-a {
+    background: var(--surface2);
+    padding: 0 20px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height .3s ease, padding .3s ease;
+    color: var(--text2);
+    font-size: 12px;
+  }
+  .faq-a.open { max-height: 400px; padding: 16px 20px; }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    color: var(--muted);
+    font-size: 11px;
+    padding-top: 40px;
+    border-top: 1px solid var(--border);
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  section { animation: fadeUp .5s ease both; }
+  section:nth-child(2)  { animation-delay: .05s; }
+  section:nth-child(3)  { animation-delay: .10s; }
+  section:nth-child(4)  { animation-delay: .15s; }
+  section:nth-child(5)  { animation-delay: .20s; }
+  section:nth-child(6)  { animation-delay: .25s; }
+  section:nth-child(7)  { animation-delay: .30s; }
+  section:nth-child(8)  { animation-delay: .35s; }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  /* ── INLINE CODE ── */
+  code {
+    background: var(--surface2);
+    color: var(--accent2);
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: .9em;
+  }
+
+  /* ── TOP PILL NAV ── */
+  .nav-pills {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 48px;
+  }
+  .nav-pill {
+    font-size: 11px;
+    text-decoration: none;
+    padding: 5px 14px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    transition: all .2s;
+    letter-spacing: .05em;
+  }
+  .nav-pill:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* ── LANG SELECTOR ── */
+  .lang-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:48px;flex-wrap:wrap;gap:12px;}
+  .lang-bar-left{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);border:1px solid var(--accent);padding:3px 12px;border-radius:20px;opacity:.8;}
+  .lang-selector{position:relative;}
+  .lang-btn{display:flex;align-items:center;gap:7px;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:5px 14px 5px 10px;cursor:pointer;font-family:'DM Mono',monospace;font-size:12px;color:var(--text);transition:border-color .2s;}
+  .lang-btn:hover{border-color:var(--accent);}
+  .lang-flag{font-size:16px;line-height:1;}
+  .lang-arrow{color:var(--accent);font-size:10px;transition:transform .2s;margin-left:2px;}
+  .lang-btn.open .lang-arrow{transform:rotate(180deg);}
+  .lang-dropdown{position:absolute;top:calc(100% + 6px);right:0;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:6px;min-width:180px;z-index:100;display:none;box-shadow:0 8px 32px #00000060;}
+  .lang-dropdown.open{display:block;}
+  .lang-option{display:flex;align-items:center;gap:10px;padding:7px 10px;border-radius:8px;cursor:pointer;font-size:12px;color:var(--text2);transition:background .15s;}
+  .lang-option:hover{background:var(--surface2);color:var(--text);}
+  .lang-option.active{background:#4af0b418;color:var(--accent);}
+  .lang-option .flag{font-size:16px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="lang-bar">
+  <span class="lang-bar-left" data-i18n="guide_tag">Guide Visuel · Débutant</span>
+  <div class="lang-selector">
+    <button class="lang-btn" id="langBtn" onclick="toggleLangMenu()">
+      <span class="lang-flag" id="currentFlag">🇫🇷</span>
+      <span class="lang-name" id="currentName">Français</span>
+      <span class="lang-arrow">▼</span>
+    </button>
+    <div class="lang-dropdown" id="langDropdown"></div>
+  </div>
+</div>
+
+<header>
+  <h1>Password <span>Audit</span></h1>
+  <p class="subtitle" data-i18n="subtitle">Exporter, nettoyer et importer tous tes mots de passe vers Proton Pass — étape par étape.</p>
+</header>
+
+<nav class="nav-pills">
+  <a class="nav-pill" href="#overview" data-i18n="nav_overview">Vue d'ensemble</a>
+  <a class="nav-pill" href="#python"   data-i18n="nav_python">Installer Python</a>
+  <a class="nav-pill" href="#export"   data-i18n="nav_export">Exporter les CSV</a>
+  <a class="nav-pill" href="#run"      data-i18n="nav_run">Lancer l'audit</a>
+  <a class="nav-pill" href="#import"   data-i18n="nav_import">Importer Proton Pass</a>
+  <a class="nav-pill" href="#vaults"   data-i18n="nav_vaults">Organiser les Vaults</a>
+  <a class="nav-pill" href="#faq"      data-i18n="nav_faq">FAQ</a>
+</nav>
+
+<section id="overview">
+  <div class="section-label" data-i18n="s0_label">Vue d'ensemble</div>
+  <div class="card">
+    <div class="card-title" data-i18n="s0_what_title">🗺 Ce qu'on va faire</div>
+    <p data-i18n="s0_what_body">Tu as des mots de passe éparpillés dans Chrome, Firefox, Opera, Safari, Vivaldi… certains datent de 20 ans. On va tout fusionner, trier, évaluer la force de chaque pwd, détecter les sites morts — et finalement importer le tout proprement dans Proton Pass.</p>
+  </div>
+  <div class="card">
+    <div class="card-title" data-i18n="s0_tools_title">🧰 Outils nécessaires</div>
+    <p><strong>Python 3.8+</strong> — <span data-i18n="s0_tools_python">gratuit, à installer si absent</span></p>
+    <p><strong>zxcvbn</strong> — <span data-i18n="s0_tools_zxcvbn">librairie de scoring, 1 commande à taper</span></p>
+    <p><strong>pwd_audit_gui.py</strong> — <span data-i18n="s0_tools_script">le script fourni avec ce guide</span></p>
+    <div class="tip"><span class="tip-icon">💡</span><span data-i18n="s0_local_tip">Tout tourne en local sur ta machine — aucun mot de passe n'est envoyé sur internet.</span></div>
+  </div>
+</section>
+
+<section id="python">
+  <div class="section-label" data-i18n="s1_label">Étape 1 — Installer Python &amp; la librairie</div>
+  <div class="install-grid">
+    <div class="install-card">
+      <h4>🪟 Windows 10/11</h4>
+      <p style="color:var(--text2);font-size:12px;margin-bottom:10px;" data-i18n="s1_win_desc">1. Va sur python.org/downloads 2. Télécharge Python 3.12 3. Lance l'installeur — coche Add Python to PATH 4. Ouvre PowerShell et tape :</p>
+      <div class="code-block">python --version
+<span class="comment" data-i18n="code_win_check"># doit afficher Python 3.x.x</span>
+pip install zxcvbn</div>
+    </div>
+    <div class="install-card">
+      <h4>🍎 macOS</h4>
+      <p style="color:var(--text2);font-size:12px;margin-bottom:10px;" data-i18n="s1_mac_desc">Python 3 est déjà installé sur macOS récent. Ouvre le Terminal :</p>
+      <div class="code-block">python3 --version
+<span class="comment" data-i18n="code_mac_check"># si absent : brew install python3</span>
+pip3 install zxcvbn</div>
+    </div>
+    <div class="install-card">
+      <h4>🐧 Raspberry Pi / Linux</h4>
+      <p style="color:var(--text2);font-size:12px;margin-bottom:10px;" data-i18n="s1_raspi_desc">Python 3 est inclus dans TwisterOS. Ouvre un terminal :</p>
+      <div class="code-block">python3 --version
+pip3 install zxcvbn \
+  --break-system-packages</div>
+    </div>
+    <div class="install-card">
+      <h4 data-i18n="s1_check_title">✅ Vérifier que tout marche</h4>
+      <p style="color:var(--text2);font-size:12px;margin-bottom:10px;" data-i18n="s1_check_desc">Dans le terminal, copie-colle :</p>
+      <div class="code-block">python3 -c "import zxcvbn; \
+print('zxcvbn OK')"</div>
+      <p style="color:var(--text2);font-size:12px;margin-top:8px;" data-i18n="s1_check_result">Tu dois voir : zxcvbn OK — Si erreur → retente pip install</p>
+    </div>
+  </div>
+  <div class="warn" style="margin-top:12px">
+    <span class="warn-icon">⚠️</span><span data-i18n="s1_win_warn">Sur Windows, si python n'est pas reconnu après install, ferme et rouvre PowerShell. Ou essaie py à la place de python.</span>
+  </div>
+</section>
+
+<section id="export">
+  <div class="section-label" data-i18n="s2_label">Étape 2 — Exporter les CSV depuis chaque navigateur</div>
+  <div class="danger-box">
+    <span class="tip-icon">🔴</span><span data-i18n="s2_danger">Les CSV exportés contiennent tous tes mots de passe en clair. Mets-les dans un dossier temporaire dédié, et supprime-les après l'import.</span>
+  </div>
+  <div class="browser-grid">
+    <div class="browser-card">
+      <div class="browser-name"><div class="browser-dot" style="background:#4a9af0"></div>Chrome / Edge / Brave</div>
+      <div class="browser-path" data-i18n="s2_chrome_path">1. chrome://password-manager/settings 2. Mots de passe enregistrés 3. ⋮ → Exporter</div>
+      <div class="csv-cols">name · url · username · password</div>
+      <div class="browser-note" data-i18n="s2_chrome_note">Vivaldi, Opera, Chromium : même procédure via chrome://settings/passwords</div>
+    </div>
+    <div class="browser-card">
+      <div class="browser-name"><div class="browser-dot" style="background:#f06a4a"></div>Firefox</div>
+      <div class="browser-path" data-i18n="s2_firefox_path">1. about:logins 2. ⋯ → Exporter les identifiants 3. Confirme mot de passe système</div>
+      <div class="csv-cols">url · username · password · guid · timeCreated · timePasswordChanged</div>
+      <div class="browser-note" data-i18n="s2_firefox_note">Timestamps Firefox en millisecondes Unix — convertis automatiquement.</div>
+    </div>
+    <div class="browser-card">
+      <div class="browser-name"><div class="browser-dot" style="background:#4af0e0"></div>Safari</div>
+      <div class="browser-path" data-i18n="s2_safari_path">1. Safari → Réglages 2. Mots de passe 3. Touch ID 4. ⋯ → Exporter</div>
+      <div class="csv-cols">Title · URL · Username · Password · OTPAuth · Notes</div>
+      <div class="browser-note" data-i18n="s2_safari_note">⚠️ Désactive iCloud Drive avant l'export.</div>
+    </div>
+    <div class="browser-card">
+      <div class="browser-name"><div class="browser-dot" style="background:#c04af0"></div>Vivaldi</div>
+      <div class="browser-path" data-i18n="s2_vivaldi_path">1. Menu Vivaldi → Fichier → Exporter mots de passe — OU — vivaldi://settings/privacy</div>
+      <div class="csv-cols">name · url · username · password · note</div>
+      <div class="browser-note" data-i18n="s2_vivaldi_note">Même format que Chrome — détecté automatiquement.</div>
+    </div>
+    <div class="browser-card">
+      <div class="browser-name"><div class="browser-dot" style="background:#f04a4a"></div>Opera</div>
+      <div class="browser-path" data-i18n="s2_opera_path">1. Paramètres (Alt+P) 2. Avancé → Sécurité 3. Exporter les mots de passe</div>
+      <div class="csv-cols">name · url · username · password</div>
+      <div class="browser-note" data-i18n="s2_opera_note">Identique au format Chrome.</div>
+    </div>
+    <div class="browser-card">
+      <div class="browser-name"><div class="browser-dot" style="background:#7b5af0"></div>Proton Pass</div>
+      <div class="browser-path" data-i18n="s2_proton_path">1. Extension Proton Pass 2. ☰ → Paramètres 3. Export → CSV</div>
+      <div class="csv-cols">name · url · email · username · password · note · totp · vault</div>
+      <div class="browser-note" data-i18n="s2_proton_note">Utile pour consolider un export Proton Pass existant.</div>
+    </div>
+  </div>
+  <div class="tip" style="margin-top:16px">
+    <span class="tip-icon">💡</span><span data-i18n="s2_folder_tip">Mets tous tes CSV dans un même dossier, ex: C:\pwd_audit\ ou ~/pwd_audit/</span>
+  </div>
+</section>
+
+<section id="run">
+  <div class="section-label" data-i18n="s3_label">Étape 3 — Lancer pwd_audit_gui.py</div>
+  <div class="steps">
+    <div class="step">
+      <h3 data-i18n="s3_step1_h">Copie le fichier script</h3>
+      <p data-i18n="s3_step1_p">Place pwd_audit_gui.py dans le même dossier que tes CSV, ou n'importe où sur ton disque.</p>
+      <div class="os-badges"><span class="badge win">Windows</span><span class="badge mac">macOS</span><span class="badge linux">Linux</span><span class="badge raspi">Raspi</span></div>
+    </div>
+    <div class="step">
+      <h3 data-i18n="s3_step2_h">Ouvre un terminal dans ce dossier</h3>
+      <p data-i18n="s3_step2_p">Windows : Shift+clic droit → "Ouvrir PowerShell ici" — macOS : clic droit → "Nouveau terminal ici" — Linux/Raspi : clic droit → "Ouvrir dans un terminal"</p>
+    </div>
+    <div class="step">
+      <h3 data-i18n="s3_step3_h">Lance le script</h3>
+      <div class="code-block"><span class="comment" data-i18n="code_run_win"># Windows</span>
+<span class="cmd">python</span> pwd_audit_gui.py
+
+<span class="comment" data-i18n="code_run_nix"># macOS / Linux / Raspi</span>
+<span class="cmd">python3</span> pwd_audit_gui.py</div>
+      <p data-i18n="s3_step3_p">Une fenêtre s'ouvre — c'est l'interface graphique.</p>
+    </div>
+    <div class="step">
+      <h3 data-i18n="s3_step4_h">Onglet 📂 Fichiers CSV</h3>
+      <p data-i18n="s3_step4_p">Clique "Ajouter CSV(s)" et sélectionne tous tes fichiers exportés.</p>
+    </div>
+    <div class="step">
+      <h3 data-i18n="s3_step5_h">Onglet 🔍 Audit → Lancer</h3>
+      <p data-i18n="s3_step5_p">Choisis le dossier de sortie. Laisse cochée "Vérifier les domaines morts". Clique "Lancer l'Audit". Durée : 2–5 min.</p>
+    </div>
+  </div>
+  <div class="card" style="margin-top:16px">
+    <div class="card-title" data-i18n="s3_output_title">📊 Fichiers générés</div>
+    <p data-i18n="s3_output_clean"><code>passwords_clean.csv</code> — toutes les entrées triées, score de force inclus. C'est ce fichier qu'on importe dans Proton Pass.</p>
+    <p data-i18n="s3_output_dead"><code>sites_dead.csv</code> — domaines qui n'ont pas répondu. Comptes probablement obsolètes.</p>
+    <p data-i18n="s3_output_review"><code>sites_to_review.csv</code> — domaines ambigus. À vérifier à la main.</p>
+  </div>
+</section>
+
+<section id="import">
+  <div class="section-label" data-i18n="s4_label">Étape 4 — Importer dans Proton Pass</div>
+  <div class="card">
+    <div class="card-title" data-i18n="s4_format_title">🔑 Format attendu par Proton Pass (Generic CSV)</div>
+    <p style="margin-bottom:10px" data-i18n="s4_format_desc">Proton Pass accepte un CSV avec exactement ces colonnes :</p>
+    <table class="proton-table">
+      <thead><tr>
+        <th data-i18n="s4_col_col">Colonne</th>
+        <th data-i18n="s4_col_req">Obligatoire</th>
+        <th data-i18n="s4_col_desc">Description</th>
+        <th data-i18n="s4_col_ex">Exemple</th>
+      </tr></thead>
+      <tbody>
+        <tr><td class="col-name">name</td><td class="col-req">✅ <span data-i18n="s4_required">Requis</span></td><td data-i18n="s4_name_desc">Nom/label de l'entrée</td><td>github.com</td></tr>
+        <tr><td class="col-name">url</td><td class="col-req">✅ <span data-i18n="s4_required2">Requis</span></td><td data-i18n="s4_url_desc">URL complète du site</td><td>https://github.com</td></tr>
+        <tr><td class="col-name">username</td><td class="col-req">✅ <span data-i18n="s4_required3">Requis</span></td><td data-i18n="s4_username_desc">Nom d'utilisateur</td><td>ceddev</td></tr>
+        <tr><td class="col-name">password</td><td class="col-req">✅ <span data-i18n="s4_required4">Requis</span></td><td data-i18n="s4_password_desc">Mot de passe</td><td>Gh!x9Lm2#qR7</td></tr>
+        <tr><td class="col-name">email</td><td class="col-opt">○ <span data-i18n="s4_optional">Optionnel</span></td><td data-i18n="s4_email_desc">Email associé</td><td>ced@pm.me</td></tr>
+        <tr><td class="col-name">note</td><td class="col-opt">○ <span data-i18n="s4_optional2">Optionnel</span></td><td data-i18n="s4_note_desc">Notes libres</td><td>—</td></tr>
+        <tr><td class="col-name">totp</td><td class="col-opt">○ <span data-i18n="s4_optional3">Optionnel</span></td><td data-i18n="s4_totp_desc">Secret 2FA (otpauth://)</td><td>otpauth://…</td></tr>
+        <tr><td class="col-name">vault</td><td class="col-opt">○ <span data-i18n="s4_optional4">Optionnel</span></td><td data-i18n="s4_vault_desc">Vault de destination</td><td>Personal</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="steps" style="counter-reset:step">
+    <div class="step"><h3 data-i18n="s4_step1_h">Ouvre Proton Pass</h3><p data-i18n="s4_step1_p">Clique sur l'extension Proton Pass ou va sur pass.proton.me</p></div>
+    <div class="step"><h3 data-i18n="s4_step2_h">Paramètres → Import</h3><p data-i18n="s4_step2_p">☰ → Paramètres → section Import</p></div>
+    <div class="step"><h3 data-i18n="s4_step3_h">Sélectionne "Generic CSV"</h3><p data-i18n="s4_step3_p">Choisis Generic CSV dans la liste. Clique Choisir un fichier → sélectionne passwords_clean.csv.</p></div>
+    <div class="step"><h3 data-i18n="s4_step4_h">Choisis le vault de destination</h3><p data-i18n="s4_step4_p">Sélectionne un vault existant ou crée-en un nouveau. Tu pourras réorganiser après.</p></div>
+    <div class="step">
+      <h3 data-i18n="s4_step5_h">Confirme et vérifie</h3>
+      <p data-i18n="s4_step5_p">Clique Importer. Vérifie que le nombre d'entrées correspond. Ensuite : supprime les CSV de ton disque.</p>
+      <div class="danger-box" style="margin-top:10px">
+        <span class="tip-icon">🔴</span><span data-i18n="s4_delete_warn">Supprime tous les CSV après import. Ce sont des fichiers en clair avec tous tes mots de passe.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="vaults">
+  <div class="section-label" data-i18n="s5_label">Étape 5 — Organiser les Vaults dans Proton Pass</div>
+  <p style="color:var(--text2);margin-bottom:16px;" data-i18n="s5_intro">Une fois l'import fait, répartis tes comptes dans des vaults thématiques :</p>
+  <div class="vault-grid">
+    <div class="vault-card red"><div class="vault-emoji">🔴</div><div class="vault-title">Critical</div><div class="vault-desc" data-i18n="s5_v_critical">Email principal, banque, Proton, hébergement, domaines, GitHub</div></div>
+    <div class="vault-card yellow"><div class="vault-emoji">🟡</div><div class="vault-title">Work / Dev</div><div class="vault-desc" data-i18n="s5_v_work">APIs, serveurs, DNS, registrars, outils dev, hosting</div></div>
+    <div class="vault-card green"><div class="vault-emoji">🟢</div><div class="vault-title">Personal</div><div class="vault-desc" data-i18n="s5_v_personal">Réseaux sociaux, shopping, streaming, services courants</div></div>
+    <div class="vault-card blue"><div class="vault-emoji">🔵</div><div class="vault-title">Old / Unsure</div><div class="vault-desc" data-i18n="s5_v_old">Comptes douteux, sites peut-être morts, à vérifier progressivement</div></div>
+    <div class="vault-card grey"><div class="vault-emoji">⚫</div><div class="vault-title">Shared</div><div class="vault-desc" data-i18n="s5_v_shared">Accès partagés famille / équipe</div></div>
+  </div>
+  <div class="tip" style="margin-top:16px">
+    <span class="tip-icon">💡</span><span data-i18n="s5_labels_tip">Labels utiles dans Proton Pass : 2FA-enabled, pwd-à-changer, pwd-réutilisé, hibp-compromis</span>
+  </div>
+  <div class="card" style="margin-top:16px">
+    <div class="card-title" data-i18n="s5_strategy_title">📅 Stratégie de changement de mots de passe</div>
+    <p data-i18n="s5_strategy_intro">Ne change pas tout d'un coup — tu vas abandonner. Approche progressive :</p>
+    <p style="margin-top:8px" data-i18n="s5_week1">🔴 Semaine 1 : Critical seulement (email, banque, Proton lui-même)</p>
+    <p data-i18n="s5_week2">🟡 Semaine 2–3 : Comptes avec score 0–1 sur des sites actifs</p>
+    <p data-i18n="s5_ongoing">🔄 En continu : À chaque connexion → laisser Proton Pass générer un nouveau pwd fort (20+ chars)</p>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="section-label" data-i18n="s6_label">FAQ — Questions fréquentes</div>
+  <div class="faq-item">
+    <button class="faq-q" onclick="toggleFaq(this)"><span data-i18n="s6_q1">Le script peut-il voler mes mots de passe ?</span><span class="arrow">›</span></button>
+    <div class="faq-a" data-i18n="s6_a1">Non. Le script tourne entièrement en local. Il ne fait aucune requête réseau sauf pour vérifier si les domaines (pas les mots de passe) répondent. Tu peux inspecter tout le code dans pwd_audit_gui.py.</div>
+  </div>
+  <div class="faq-item">
+    <button class="faq-q" onclick="toggleFaq(this)"><span data-i18n="s6_q2">Mon CSV n'est pas reconnu — que faire ?</span><span class="arrow">›</span></button>
+    <div class="faq-a" data-i18n="s6_a2">Le script détecte automatiquement Chrome/Firefox. Si ton CSV a des colonnes différentes, ouvre-le dans Excel/LibreOffice et renomme les colonnes en name, url, username, password.</div>
+  </div>
+  <div class="faq-item">
+    <button class="faq-q" onclick="toggleFaq(this)"><span data-i18n="s6_q3">Pourquoi certains sites vivants apparaissent en "dead" ?</span><span class="arrow">›</span></button>
+    <div class="faq-a" data-i18n="s6_a3">Environ 20–30% de faux positifs. Un site peut bloquer les robots (403 Forbidden), avoir un timeout réseau passager, ou utiliser Cloudflare. Les sites dans sites_to_review.csv méritent une vérification manuelle.</div>
+  </div>
+  <div class="faq-item">
+    <button class="faq-q" onclick="toggleFaq(this)"><span data-i18n="s6_q4">Comment installer Python sur Raspberry Pi TwisterOS ?</span><span class="arrow">›</span></button>
+    <div class="faq-a" data-i18n="s6_a4">Python 3 est déjà installé sur TwisterOS. Terminal : python3 --version, puis pip3 install zxcvbn --break-system-packages, puis python3 pwd_audit_gui.py. Si Tkinter absent : sudo apt install python3-tk</div>
+  </div>
+  <div class="faq-item">
+    <button class="faq-q" onclick="toggleFaq(this)"><span data-i18n="s6_q5">Tor Browser et autres navigateurs spéciaux ?</span><span class="arrow">›</span></button>
+    <div class="faq-a" data-i18n="s6_a5">Tor Browser est basé sur Firefox — même format CSV. Le script le détecte automatiquement. Pour navigateurs obscurs, renomme les colonnes pour matcher le format Chrome ou Firefox.</div>
+  </div>
+  <div class="faq-item">
+    <button class="faq-q" onclick="toggleFaq(this)"><span data-i18n="s6_q6">Puis-je relancer l'audit plusieurs fois ?</span><span class="arrow">›</span></button>
+    <div class="faq-a" data-i18n="s6_a6">Oui, autant de fois que tu veux. Les fichiers de sortie sont écrasés à chaque lancement. La déduplication exacte évite les doublons.</div>
+  </div>
+  <div class="faq-item">
+    <button class="faq-q" onclick="toggleFaq(this)"><span data-i18n="s6_q7">Le score de force "Moyen" est-il acceptable ?</span><span class="arrow">›</span></button>
+    <div class="faq-a" data-i18n="s6_a7">Pour sites non-critiques, score 2 (Moyen) est acceptable à court terme. Pour email, banque, hébergement : vise score 4 (Très fort) — laisse Proton Pass générer des passwords 20+ caractères.</div>
+  </div>
+</section>
+
+<footer>
+  <p data-i18n="footer1">Password Audit Guide · fichier local · aucune donnée transmise</p>
+  <p style="margin-top:4px" data-i18n="footer2">Utilise ce guide avec pwd_audit_gui.py</p>
+</footer>
+
+</div>
+
+<script>
+const LANGS=[
+  {code:'fr',flag:'🇫🇷',name:'Français'},
+  {code:'en',flag:'🇬🇧',name:'English'},
+  {code:'es',flag:'🇪🇸',name:'Español'},
+  {code:'de',flag:'🇩🇪',name:'Deutsch'},
+  {code:'it',flag:'🇮🇹',name:'Italiano'},
+  {code:'pt',flag:'🇵🇹',name:'Português'},
+  {code:'ru',flag:'🇷🇺',name:'Русский'},
+  {code:'zh',flag:'🇨🇳',name:'中文'},
+  {code:'ja',flag:'🇯🇵',name:'日本語'},
+  {code:'vi',flag:'🇻🇳',name:'Tiếng Việt'},
+  {code:'th',flag:'🇹🇭',name:'ภาษาไทย'},
+  {code:'km',flag:'🇰🇭',name:'ភាសាខ្មែរ'},
+];
+const T={};
+
+T['fr']={
+guide_tag:"Guide Visuel · Débutant",
+subtitle:"Exporter, nettoyer et importer tous tes mots de passe vers Proton Pass — étape par étape.",
+nav_overview:"Vue d'ensemble",nav_python:"Installer Python",nav_export:"Exporter les CSV",
+nav_run:"Lancer l'audit",nav_import:"Importer Proton Pass",nav_vaults:"Organiser les Vaults",nav_faq:"FAQ",
+s0_label:"Vue d'ensemble",s0_what_title:"🗺 Ce qu'on va faire",
+s0_what_body:"Tu as des mots de passe éparpillés dans Chrome, Firefox, Opera, Safari, Vivaldi… certains datent de 20 ans. On va tout fusionner, trier, évaluer la force de chaque pwd, détecter les sites morts — et finalement importer le tout proprement dans Proton Pass.",
+s0_tools_title:"🧰 Outils nécessaires",s0_tools_python:"gratuit, à installer si absent",
+s0_tools_zxcvbn:"librairie de scoring de mots de passe, 1 commande",s0_tools_script:"le script fourni avec ce guide",
+s0_local_tip:"Tout tourne en local sur ta machine — aucun mot de passe n'est envoyé sur internet.",
+s1_label:"Étape 1 — Installer Python & la librairie",
+s1_win_desc:"1. Va sur python.org/downloads\n2. Télécharge Python 3.12 (bouton jaune)\n3. Lance l'installeur — coche bien \"Add Python to PATH\"\n4. Ouvre PowerShell et tape :",
+s1_mac_desc:"Python 3 est déjà installé sur macOS récent.\nOuvre le Terminal (Spotlight → \"Terminal\") :",
+s1_raspi_desc:"Python 3 est inclus dans TwisterOS.\nOuvre un terminal :",
+s1_check_title:"✅ Vérifier que tout marche",s1_check_desc:"Dans le terminal, copie-colle :",
+s1_check_result:"Tu dois voir : zxcvbn OK\nSi erreur → retente pip install",
+s1_win_warn:"Sur Windows, si python n'est pas reconnu après install, ferme et rouvre PowerShell. Ou essaie py à la place de python.",
+s2_label:"Étape 2 — Exporter les CSV depuis chaque navigateur",
+s2_danger:"Important : les CSV exportés contiennent tous tes mots de passe en clair. Mets-les dans un dossier temporaire dédié, et supprime-les après l'import dans Proton Pass.",
+s2_chrome_path:"1. Tape dans la barre d'adresse : chrome://password-manager/settings\n2. Section \"Mots de passe enregistrés\"\n3. Bouton ⋮ → Exporter les mots de passe\n4. Confirme avec ton mot de passe Windows/Mac",
+s2_chrome_note:"Vivaldi, Opera, Chromium : même procédure via chrome://settings/passwords",
+s2_firefox_path:"1. Tape : about:logins\n2. Bouton ⋯ (en haut à droite)\n3. Exporter les identifiants\n4. Confirme avec ton mot de passe système",
+s2_firefox_note:"Les timestamps Firefox sont en millisecondes Unix — le script les convertit automatiquement.",
+s2_safari_path:"1. Menu Safari → Réglages\n2. Onglet Mots de passe\n3. Authentifie-toi (Touch ID ou mot de passe Mac)\n4. Bouton ⋯ en bas → Exporter tous les mots de passe\n5. Sauvegarde le fichier Passwords.csv",
+s2_safari_note:"⚠️ Désactive iCloud Drive ou Time Machine avant l'export pour éviter une copie non chiffrée dans le cloud.",
+s2_vivaldi_path:"1. Menu Vivaldi → Fichier → Exporter → Exporter les mots de passe\n— OU — vivaldi://settings/privacy → section Mots de passe → Exporter",
+s2_vivaldi_note:"Même format que Chrome — le script le détecte automatiquement.",
+s2_opera_path:"1. Paramètres (Alt+P)\n2. Avancé → Sécurité\n3. Section Mots de passe\n4. Exporter les mots de passe",
+s2_opera_note:"Identique au format Chrome Chromium.",
+s2_proton_path:"1. Clique sur l'extension Proton Pass\n2. Menu ☰ → Paramètres\n3. Onglet Export → sélectionne CSV\n4. Clique Exporter → entre ton mot de passe Proton Pass",
+s2_proton_note:"Utile si tu veux consolider un export existant Proton Pass avec d'autres navigateurs.",
+s2_folder_tip:"Mets tous tes CSV dans un même dossier, par exemple C:\\pwd_audit\\ sur Windows ou ~/pwd_audit/ sur Mac/Linux. Ça simplifie la suite.",
+s3_label:"Étape 3 — Lancer pwd_audit_gui.py",
+s3_step1_h:"Copie le fichier script",s3_step1_p:"Place pwd_audit_gui.py dans le même dossier que tes CSV, ou n'importe où sur ton disque.",
+s3_step2_h:"Ouvre un terminal dans ce dossier",
+s3_step2_p:"Windows : Shift+clic droit → \"Ouvrir PowerShell ici\"\nmacOS : clic droit sur le dossier → \"Nouveau terminal ici\"\nLinux/Raspi : clic droit → \"Ouvrir dans un terminal\"",
+s3_step3_h:"Lance le script",s3_step3_p:"Une fenêtre s'ouvre — c'est l'interface graphique.",
+s3_step4_h:"Onglet 📂 Fichiers CSV",s3_step4_p:"Clique \"Ajouter CSV(s)\" et sélectionne tous tes fichiers exportés.",
+s3_step5_h:"Onglet 🔍 Audit → Lancer",s3_step5_p:"Choisis le dossier de sortie. Laisse cochée l'option \"Vérifier les domaines morts\" si tu es connecté à internet. Clique \"Lancer l'Audit\". Durée estimée : 2–5 minutes.",
+s3_output_title:"📊 Fichiers générés",
+s3_output_clean:"passwords_clean.csv — toutes les entrées triées, avec score de force et statut du site. C'est ce fichier qu'on importe dans Proton Pass.",
+s3_output_dead:"sites_dead.csv — domaines qui n'ont pas répondu (NXDOMAIN, timeout…). Ces comptes sont probablement obsolètes.",
+s3_output_review:"sites_to_review.csv — domaines ambigus (403, redirections bizarres). À vérifier à la main.",
+s4_label:"Étape 4 — Importer dans Proton Pass",s4_format_title:"🔑 Format attendu par Proton Pass (Generic CSV)",
+s4_format_desc:"Proton Pass accepte un CSV avec exactement ces colonnes (le script les génère automatiquement) :",
+s4_col_col:"Colonne",s4_col_req:"Obligatoire",s4_col_desc:"Description",s4_col_ex:"Exemple",
+s4_required:"Requis",s4_required2:"Requis",s4_required3:"Requis",s4_required4:"Requis",
+s4_optional:"Optionnel",s4_optional2:"Optionnel",s4_optional3:"Optionnel",s4_optional4:"Optionnel",
+s4_name_desc:"Nom/label de l'entrée",s4_url_desc:"URL complète du site",s4_username_desc:"Nom d'utilisateur",
+s4_password_desc:"Mot de passe",s4_email_desc:"Email associé",s4_note_desc:"Notes libres",
+s4_totp_desc:"Secret 2FA (format otpauth://)",s4_vault_desc:"Vault de destination",
+s4_step1_h:"Ouvre Proton Pass",s4_step1_p:"Dans ton navigateur, clique sur l'extension Proton Pass — ou va sur pass.proton.me",
+s4_step2_h:"Paramètres → Import",s4_step2_p:"Clique sur le menu ☰ (hamburger) → Paramètres → section Import",
+s4_step3_h:"Sélectionne \"Generic CSV\"",s4_step3_p:"Dans la liste des sources, choisis Generic CSV. Clique Choisir un fichier et sélectionne ton passwords_clean.csv.",
+s4_step4_h:"Choisis le vault de destination",s4_step4_p:"Sélectionne un vault existant ou crée-en un nouveau (ex: \"Import Browser\"). Tu pourras réorganiser après.",
+s4_step5_h:"Confirme et vérifie",s4_step5_p:"Clique Importer. Proton Pass affiche un résumé. Vérifie que le nombre d'entrées correspond. Ensuite : supprime les CSV sources de ton disque.",
+s4_delete_warn:"Supprime tous les CSV (exportés + générés) après import. Ce sont des fichiers en clair avec tous tes mots de passe.",
+s5_label:"Étape 5 — Organiser les Vaults dans Proton Pass",
+s5_intro:"Une fois l'import fait, répartis tes comptes dans des vaults thématiques :",
+s5_v_critical:"Email principal, banque, Proton, hébergement, domaines, GitHub",
+s5_v_work:"APIs, serveurs, DNS, registrars, outils dev, hosting",
+s5_v_personal:"Réseaux sociaux, shopping, streaming, services courants",
+s5_v_old:"Comptes douteux, sites peut-être morts, à vérifier progressivement",
+s5_v_shared:"Accès partagés famille / équipe",
+s5_labels_tip:"Labels utiles à créer dans Proton Pass : 2FA-enabled, pwd-à-changer, pwd-réutilisé, hibp-compromis",
+s5_strategy_title:"📅 Stratégie de changement de mots de passe",
+s5_strategy_intro:"Ne change pas tout d'un coup — tu vas abandonner. Approche progressive :",
+s5_week1:"🔴 Semaine 1 : Critical seulement (email, banque, Proton lui-même)",
+s5_week2:"🟡 Semaine 2–3 : Comptes avec score 0–1 (Très faible / Faible) sur des sites actifs",
+s5_ongoing:"🔄 En continu : À chaque connexion → laisser Proton Pass générer un nouveau pwd fort (20+ chars)",
+s6_label:"FAQ — Questions fréquentes",
+s6_q1:"Le script peut-il voler mes mots de passe ?",
+s6_a1:"Non. Le script tourne entièrement en local sur ta machine. Il ne fait aucune requête réseau sauf pour vérifier si les domaines (pas les mots de passe) répondent — et uniquement si tu coches l'option. Tu peux inspecter tout le code dans pwd_audit_gui.py.",
+s6_q2:"Mon CSV n'est pas reconnu — que faire ?",
+s6_a2:"Le script détecte automatiquement Chrome/Firefox. Pour les autres formats (Vivaldi, Opera, Safari), il utilise la détection Chrome. Si ton CSV a des colonnes différentes, ouvre-le dans Excel/LibreOffice et renomme les colonnes en name, url, username, password.",
+s6_q3:"Pourquoi certains sites vivants apparaissent en \"dead\" ?",
+s6_a3:"Environ 20–30% des vérifications donnent des faux positifs. Un site peut bloquer les robots (403 Forbidden), avoir un timeout réseau passager, ou utiliser Cloudflare qui filtre les requêtes automatisées.",
+s6_q4:"Comment installer Python sur Raspberry Pi TwisterOS ?",
+s6_a4:"Python 3 est déjà installé sur TwisterOS. Terminal : python3 --version, puis pip3 install zxcvbn --break-system-packages, puis python3 pwd_audit_gui.py. Si Tkinter absent : sudo apt install python3-tk",
+s6_q5:"Tor Browser et autres navigateurs spéciaux ?",
+s6_a5:"Tor Browser est basé sur Firefox — son export CSV a le même format. Le script le détecte automatiquement. Pour les navigateurs très obscurs, renomme les colonnes pour matcher le format Chrome ou Firefox.",
+s6_q6:"Puis-je relancer l'audit plusieurs fois ?",
+s6_a6:"Oui, autant de fois que tu veux. Les fichiers de sortie sont écrasés à chaque lancement. La déduplication exacte évite les doublons même si tu ajoutes plusieurs fois les mêmes fichiers.",
+s6_q7:"Le score de force \"Moyen\" est-il acceptable ?",
+s6_a7:"Pour des sites non-critiques (forums, petits services), un score 2 (Moyen) est acceptable à court terme. Pour email, banque, hébergement, réseaux sociaux principaux : vise score 4 (Très fort) — laisse Proton Pass générer des mots de passe aléatoires de 20+ caractères.",
+footer1:"Password Audit Guide · fichier local · aucune donnée transmise",
+footer2:"Utilise ce guide avec pwd_audit_gui.py",,
+code_win_check:"# doit afficher Python 3.x.x",
+code_mac_check:"# si absent : brew install python3",
+code_run_win:"# Windows",
+code_run_nix:"# macOS / Linux / Raspi"
+};
+
+T['en']={
+guide_tag:"Visual Guide · Beginner",
+subtitle:"Export, clean and import all your passwords to Proton Pass — step by step.",
+nav_overview:"Overview",nav_python:"Install Python",nav_export:"Export CSVs",
+nav_run:"Run the audit",nav_import:"Import to Proton Pass",nav_vaults:"Organize Vaults",nav_faq:"FAQ",
+s0_label:"Overview",s0_what_title:"🗺 What we're doing",
+s0_what_body:"You have passwords scattered across Chrome, Firefox, Opera, Safari, Vivaldi… some dating back 20 years. We'll merge everything, sort it, evaluate each password's strength, detect dead sites — and finally import it all cleanly into Proton Pass.",
+s0_tools_title:"🧰 Required tools",s0_tools_python:"free, install if missing",
+s0_tools_zxcvbn:"password strength scoring, 1 command",s0_tools_script:"the script included with this guide",
+s0_local_tip:"Everything runs locally on your machine — no password is sent over the internet.",
+s1_label:"Step 1 — Install Python & the library",
+s1_win_desc:"1. Go to python.org/downloads\n2. Download Python 3.12 (yellow button)\n3. Run installer — check \"Add Python to PATH\"\n4. Open PowerShell and type:",
+s1_mac_desc:"Python 3 is already installed on recent macOS.\nOpen Terminal (Spotlight → \"Terminal\"):",
+s1_raspi_desc:"Python 3 is included in TwisterOS.\nOpen a terminal:",
+s1_check_title:"✅ Verify everything works",s1_check_desc:"In the terminal, copy-paste:",
+s1_check_result:"You should see: zxcvbn OK\nIf error → retry pip install",
+s1_win_warn:"On Windows, if python is not recognized after install, close and reopen PowerShell. Or try py instead of python.",
+s2_label:"Step 2 — Export CSVs from each browser",
+s2_danger:"Important: exported CSVs contain all your passwords in plain text. Put them in a dedicated temporary folder, and delete them after importing into Proton Pass.",
+s2_chrome_path:"1. Type in address bar: chrome://password-manager/settings\n2. Section \"Saved passwords\"\n3. Button ⋮ → Export passwords\n4. Confirm with your Windows/Mac password",
+s2_chrome_note:"Vivaldi, Opera, Chromium: same procedure via chrome://settings/passwords",
+s2_firefox_path:"1. Type: about:logins\n2. Button ⋯ (top right)\n3. Export logins\n4. Confirm with your system password",
+s2_firefox_note:"Firefox timestamps are in Unix milliseconds — the script converts them automatically.",
+s2_safari_path:"1. Safari menu → Settings\n2. Passwords tab\n3. Authenticate (Touch ID or Mac password)\n4. Button ⋯ at bottom → Export All Passwords\n5. Save the Passwords.csv file",
+s2_safari_note:"⚠️ Disable iCloud Drive or Time Machine before exporting to avoid an unencrypted cloud copy.",
+s2_vivaldi_path:"1. Vivaldi menu → File → Export → Export Passwords\n— OR — vivaldi://settings/privacy → Passwords → Export",
+s2_vivaldi_note:"Same format as Chrome — detected automatically.",
+s2_opera_path:"1. Settings (Alt+P)\n2. Advanced → Security\n3. Passwords section\n4. Export passwords",
+s2_opera_note:"Identical to Chrome Chromium format.",
+s2_proton_path:"1. Click the Proton Pass extension\n2. Menu ☰ → Settings\n3. Export tab → select CSV\n4. Click Export → enter your Proton Pass password",
+s2_proton_note:"Useful to consolidate an existing Proton Pass export with other browsers.",
+s2_folder_tip:"Put all your CSVs in the same folder, e.g. C:\\pwd_audit\\ on Windows or ~/pwd_audit/ on Mac/Linux.",
+s3_label:"Step 3 — Run pwd_audit_gui.py",
+s3_step1_h:"Copy the script file",s3_step1_p:"Place pwd_audit_gui.py in the same folder as your CSVs, or anywhere on your disk.",
+s3_step2_h:"Open a terminal in that folder",
+s3_step2_p:"Windows: Shift+right-click → \"Open PowerShell here\"\nmacOS: right-click folder → \"New Terminal at Folder\"\nLinux/Raspi: right-click → \"Open in Terminal\"",
+s3_step3_h:"Run the script",s3_step3_p:"A window opens — that's the graphical interface.",
+s3_step4_h:"Tab 📂 CSV Files",s3_step4_p:"Click \"Add CSV(s)\" and select all your exported files.",
+s3_step5_h:"Tab 🔍 Audit → Launch",s3_step5_p:"Choose the output folder. Keep \"Check dead domains\" checked if you're online. Click \"Launch Audit\". Estimated time: 2–5 minutes.",
+s3_output_title:"📊 Generated files",
+s3_output_clean:"passwords_clean.csv — all sorted entries with strength score and site status. This is the file to import into Proton Pass.",
+s3_output_dead:"sites_dead.csv — domains that didn't respond (NXDOMAIN, timeout…). These accounts are probably obsolete.",
+s3_output_review:"sites_to_review.csv — ambiguous domains (403, odd redirects). Check manually.",
+s4_label:"Step 4 — Import into Proton Pass",s4_format_title:"🔑 Proton Pass expected format (Generic CSV)",
+s4_format_desc:"Proton Pass accepts a CSV with exactly these columns (the script generates them automatically):",
+s4_col_col:"Column",s4_col_req:"Required",s4_col_desc:"Description",s4_col_ex:"Example",
+s4_required:"Required",s4_required2:"Required",s4_required3:"Required",s4_required4:"Required",
+s4_optional:"Optional",s4_optional2:"Optional",s4_optional3:"Optional",s4_optional4:"Optional",
+s4_name_desc:"Entry label/name",s4_url_desc:"Full site URL",s4_username_desc:"Username",
+s4_password_desc:"Password",s4_email_desc:"Associated email",s4_note_desc:"Free notes",
+s4_totp_desc:"2FA secret (otpauth:// format)",s4_vault_desc:"Destination vault",
+s4_step1_h:"Open Proton Pass",s4_step1_p:"In your browser, click the Proton Pass extension — or go to pass.proton.me",
+s4_step2_h:"Settings → Import",s4_step2_p:"Click the ☰ menu → Settings → Import section",
+s4_step3_h:"Select \"Generic CSV\"",s4_step3_p:"From the source list, choose Generic CSV. Click Choose file and select your passwords_clean.csv.",
+s4_step4_h:"Choose destination vault",s4_step4_p:"Select an existing vault or create a new one (e.g. \"Import Browser\"). You can reorganize later.",
+s4_step5_h:"Confirm and verify",s4_step5_p:"Click Import. Proton Pass shows a summary. Check that the entry count matches. Then: delete the source CSVs from your disk.",
+s4_delete_warn:"Delete all CSVs (exported + generated) after import. These are plain text files with all your passwords.",
+s5_label:"Step 5 — Organize Vaults in Proton Pass",
+s5_intro:"Once imported, distribute your accounts into thematic vaults:",
+s5_v_critical:"Main email, bank, Proton, hosting, domains, GitHub",
+s5_v_work:"APIs, servers, DNS, registrars, dev tools, hosting",
+s5_v_personal:"Social media, shopping, streaming, everyday services",
+s5_v_old:"Doubtful accounts, possibly dead sites, check progressively",
+s5_v_shared:"Shared access family / team",
+s5_labels_tip:"Useful labels to create in Proton Pass: 2FA-enabled, pwd-to-change, pwd-reused, hibp-compromised",
+s5_strategy_title:"📅 Password change strategy",
+s5_strategy_intro:"Don't change everything at once — you'll give up. Progressive approach:",
+s5_week1:"🔴 Week 1: Critical only (email, bank, Proton itself)",
+s5_week2:"🟡 Weeks 2–3: Accounts with score 0–1 (Very weak / Weak) on active sites",
+s5_ongoing:"🔄 Ongoing: Each time you log in → let Proton Pass generate a new strong pwd (20+ chars)",
+s6_label:"FAQ — Frequently asked questions",
+s6_q1:"Can the script steal my passwords?",
+s6_a1:"No. The script runs entirely locally on your machine. It makes no network requests except to check if domains (not passwords) respond — and only if you check the option. You can inspect all the code in pwd_audit_gui.py.",
+s6_q2:"My CSV is not recognized — what to do?",
+s6_a2:"The script auto-detects Chrome/Firefox. For other formats (Vivaldi, Opera, Safari), it uses Chrome detection since they share the same format. If your CSV has different columns, open it in Excel/LibreOffice and rename columns to name, url, username, password.",
+s6_q3:"Why do some live sites appear as \"dead\"?",
+s6_a3:"About 20–30% of checks give false positives. A site may block bots (403 Forbidden), have a network timeout, or use Cloudflare which filters automated requests.",
+s6_q4:"How to install Python on Raspberry Pi TwisterOS?",
+s6_a4:"Python 3 is already installed on TwisterOS. Terminal: python3 --version, then pip3 install zxcvbn --break-system-packages, then python3 pwd_audit_gui.py. If Tkinter missing: sudo apt install python3-tk",
+s6_q5:"Tor Browser and other special browsers?",
+s6_a5:"Tor Browser is based on Firefox — same CSV format. Detected automatically. For obscure browsers, rename columns to match Chrome or Firefox format.",
+s6_q6:"Can I run the audit multiple times?",
+s6_a6:"Yes, as many times as you want. Output files are overwritten each time. Exact deduplication prevents duplicates even if you add the same files multiple times.",
+s6_q7:"Is a \"Medium\" strength score acceptable?",
+s6_a7:"For non-critical sites (forums, small services), score 2 (Medium) is acceptable short-term. For email, bank, hosting, main social media: aim for score 4 (Very strong) — let Proton Pass generate random 20+ character passwords.",
+footer1:"Password Audit Guide · local file · no data transmitted",
+footer2:"Use this guide with pwd_audit_gui.py",,
+code_win_check:"# should show Python 3.x.x",
+code_mac_check:"# if missing: brew install python3",
+code_run_win:"# Windows",
+code_run_nix:"# macOS / Linux / Raspi"
+};
+
+T['es']={
+guide_tag:"Guía Visual · Principiante",
+subtitle:"Exporta, limpia e importa todas tus contraseñas a Proton Pass — paso a paso.",
+nav_overview:"Resumen",nav_python:"Instalar Python",nav_export:"Exportar CSV",
+nav_run:"Ejecutar auditoría",nav_import:"Importar Proton Pass",nav_vaults:"Organizar Vaults",nav_faq:"FAQ",
+s0_label:"Resumen",s0_what_title:"🗺 Qué vamos a hacer",
+s0_what_body:"Tienes contraseñas dispersas en Chrome, Firefox, Opera, Safari, Vivaldi… algunas de hace 20 años. Las vamos a fusionar, ordenar, evaluar la fortaleza de cada pwd, detectar sitios muertos — e importarlo todo limpiamente en Proton Pass.",
+s0_tools_title:"🧰 Herramientas necesarias",s0_tools_python:"gratuito, instalar si falta",
+s0_tools_zxcvbn:"puntuación de contraseñas, 1 comando",s0_tools_script:"el script incluido con esta guía",
+s0_local_tip:"Todo se ejecuta localmente en tu máquina — ninguna contraseña se envía por internet.",
+s1_label:"Paso 1 — Instalar Python y la librería",
+s1_win_desc:"1. Ve a python.org/downloads\n2. Descarga Python 3.12\n3. Ejecuta el instalador — marca \"Add Python to PATH\"\n4. Abre PowerShell y escribe:",
+s1_mac_desc:"Python 3 ya está instalado en macOS reciente.\nAbre Terminal (Spotlight → \"Terminal\"):",
+s1_raspi_desc:"Python 3 está incluido en TwisterOS.\nAbre un terminal:",
+s1_check_title:"✅ Verificar que todo funciona",s1_check_desc:"En el terminal, copia y pega:",
+s1_check_result:"Deberías ver: zxcvbn OK\nSi hay error → reintenta pip install",
+s1_win_warn:"En Windows, si python no se reconoce tras la instalación, cierra y vuelve a abrir PowerShell. O prueba py en lugar de python.",
+s2_label:"Paso 2 — Exportar los CSV de cada navegador",
+s2_danger:"Importante: los CSV exportados contienen todas tus contraseñas en texto plano. Ponlos en una carpeta temporal dedicada y elimínalos tras importarlos en Proton Pass.",
+s2_chrome_path:"1. Escribe en la barra: chrome://password-manager/settings\n2. Sección \"Contraseñas guardadas\"\n3. Botón ⋮ → Exportar contraseñas\n4. Confirma con tu contraseña Windows/Mac",
+s2_chrome_note:"Vivaldi, Opera, Chromium: mismo procedimiento via chrome://settings/passwords",
+s2_firefox_path:"1. Escribe: about:logins\n2. Botón ⋯ (arriba a la derecha)\n3. Exportar inicios de sesión\n4. Confirma con tu contraseña del sistema",
+s2_firefox_note:"Las marcas de tiempo de Firefox están en milisegundos Unix — el script las convierte automáticamente.",
+s2_safari_path:"1. Menú Safari → Configuración\n2. Pestaña Contraseñas\n3. Autentícate (Touch ID o contraseña Mac)\n4. Botón ⋯ abajo → Exportar todas las contraseñas\n5. Guarda el archivo Passwords.csv",
+s2_safari_note:"⚠️ Desactiva iCloud Drive o Time Machine antes de exportar.",
+s2_vivaldi_path:"1. Menú Vivaldi → Archivo → Exportar contraseñas\n— O — vivaldi://settings/privacy → Contraseñas → Exportar",
+s2_vivaldi_note:"Mismo formato que Chrome — detectado automáticamente.",
+s2_opera_path:"1. Configuración (Alt+P)\n2. Avanzado → Seguridad\n3. Sección Contraseñas\n4. Exportar contraseñas",
+s2_opera_note:"Idéntico al formato Chrome Chromium.",
+s2_proton_path:"1. Haz clic en la extensión Proton Pass\n2. Menú ☰ → Configuración\n3. Pestaña Exportar → selecciona CSV\n4. Haz clic en Exportar → introduce tu contraseña",
+s2_proton_note:"Útil para consolidar una exportación existente de Proton Pass con otros navegadores.",
+s2_folder_tip:"Pon todos tus CSV en la misma carpeta, por ejemplo C:\\pwd_audit\\ en Windows o ~/pwd_audit/ en Mac/Linux.",
+s3_label:"Paso 3 — Ejecutar pwd_audit_gui.py",
+s3_step1_h:"Copia el archivo script",s3_step1_p:"Coloca pwd_audit_gui.py en la misma carpeta que tus CSV, o en cualquier lugar de tu disco.",
+s3_step2_h:"Abre un terminal en esa carpeta",
+s3_step2_p:"Windows: Shift+clic derecho → \"Abrir PowerShell aquí\"\nmacOS: clic derecho en la carpeta → \"Nuevo terminal en la carpeta\"\nLinux/Raspi: clic derecho → \"Abrir en terminal\"",
+s3_step3_h:"Ejecuta el script",s3_step3_p:"Se abre una ventana — esa es la interfaz gráfica.",
+s3_step4_h:"Pestaña 📂 Archivos CSV",s3_step4_p:"Haz clic en \"Añadir CSV(s)\" y selecciona todos tus archivos exportados.",
+s3_step5_h:"Pestaña 🔍 Auditoría → Iniciar",s3_step5_p:"Elige la carpeta de salida. Deja marcada la opción \"Verificar dominios muertos\". Haz clic en \"Iniciar Auditoría\". Tiempo estimado: 2–5 minutos.",
+s3_output_title:"📊 Archivos generados",
+s3_output_clean:"passwords_clean.csv — todas las entradas ordenadas con puntuación de fortaleza y estado del sitio. Este es el archivo a importar en Proton Pass.",
+s3_output_dead:"sites_dead.csv — dominios que no respondieron. Estas cuentas probablemente están obsoletas.",
+s3_output_review:"sites_to_review.csv — dominios ambiguos (403, redirecciones extrañas). Verificar manualmente.",
+s4_label:"Paso 4 — Importar en Proton Pass",s4_format_title:"🔑 Formato esperado por Proton Pass (Generic CSV)",
+s4_format_desc:"Proton Pass acepta un CSV con exactamente estas columnas (el script las genera automáticamente):",
+s4_col_col:"Columna",s4_col_req:"Obligatorio",s4_col_desc:"Descripción",s4_col_ex:"Ejemplo",
+s4_required:"Requerido",s4_required2:"Requerido",s4_required3:"Requerido",s4_required4:"Requerido",
+s4_optional:"Opcional",s4_optional2:"Opcional",s4_optional3:"Opcional",s4_optional4:"Opcional",
+s4_name_desc:"Nombre/etiqueta de la entrada",s4_url_desc:"URL completa del sitio",s4_username_desc:"Nombre de usuario",
+s4_password_desc:"Contraseña",s4_email_desc:"Email asociado",s4_note_desc:"Notas libres",
+s4_totp_desc:"Secreto 2FA (formato otpauth://)",s4_vault_desc:"Vault de destino",
+s4_step1_h:"Abre Proton Pass",s4_step1_p:"En tu navegador, haz clic en la extensión Proton Pass — o ve a pass.proton.me",
+s4_step2_h:"Configuración → Importar",s4_step2_p:"Haz clic en el menú ☰ → Configuración → sección Importar",
+s4_step3_h:"Selecciona \"Generic CSV\"",s4_step3_p:"De la lista de fuentes, elige Generic CSV. Haz clic en Elegir archivo y selecciona tu passwords_clean.csv.",
+s4_step4_h:"Elige el vault de destino",s4_step4_p:"Selecciona un vault existente o crea uno nuevo. Podrás reorganizar después.",
+s4_step5_h:"Confirma y verifica",s4_step5_p:"Haz clic en Importar. Verifica que el número de entradas coincida. Luego: elimina los CSV fuente de tu disco.",
+s4_delete_warn:"Elimina todos los CSV (exportados + generados) tras la importación. Son archivos en texto plano con todas tus contraseñas.",
+s5_label:"Paso 5 — Organizar los Vaults en Proton Pass",
+s5_intro:"Una vez importado, distribuye tus cuentas en vaults temáticos:",
+s5_v_critical:"Email principal, banco, Proton, hosting, dominios, GitHub",
+s5_v_work:"APIs, servidores, DNS, registrars, herramientas dev, hosting",
+s5_v_personal:"Redes sociales, compras, streaming, servicios cotidianos",
+s5_v_old:"Cuentas dudosas, sitios posiblemente muertos, verificar progresivamente",
+s5_v_shared:"Acceso compartido familia/equipo",
+s5_labels_tip:"Etiquetas útiles en Proton Pass: 2FA-enabled, pwd-to-change, pwd-reused, hibp-compromised",
+s5_strategy_title:"📅 Estrategia de cambio de contraseñas",
+s5_strategy_intro:"No cambies todo de golpe — te rendirás. Enfoque progresivo:",
+s5_week1:"🔴 Semana 1: Solo Critical (email, banco, Proton mismo)",
+s5_week2:"🟡 Semanas 2–3: Cuentas con puntuación 0–1 en sitios activos",
+s5_ongoing:"🔄 Continuamente: Cada vez que inicies sesión → deja que Proton Pass genere un nuevo pwd fuerte (20+ chars)",
+s6_label:"FAQ — Preguntas frecuentes",
+s6_q1:"¿Puede el script robar mis contraseñas?",
+s6_a1:"No. El script se ejecuta completamente en local. No hace ninguna petición de red excepto para verificar si los dominios (no las contraseñas) responden.",
+s6_q2:"Mi CSV no es reconocido — ¿qué hacer?",
+s6_a2:"El script detecta automáticamente Chrome/Firefox. Si tu CSV tiene columnas diferentes, ábrelo en Excel y renombra las columnas a name, url, username, password.",
+s6_q3:"¿Por qué algunos sitios activos aparecen como \"dead\"?",
+s6_a3:"Aproximadamente el 20–30% de las verificaciones dan falsos positivos. Un sitio puede bloquear bots (403), tener un timeout de red, o usar Cloudflare.",
+s6_q4:"¿Cómo instalar Python en Raspberry Pi TwisterOS?",
+s6_a4:"Python 3 ya está instalado en TwisterOS. Terminal: python3 --version, luego pip3 install zxcvbn --break-system-packages, luego python3 pwd_audit_gui.py.",
+s6_q5:"¿Tor Browser y otros navegadores especiales?",
+s6_a5:"Tor Browser está basado en Firefox — mismo formato CSV. El script lo detecta automáticamente.",
+s6_q6:"¿Puedo ejecutar la auditoría varias veces?",
+s6_a6:"Sí, tantas veces como quieras. Los archivos de salida se sobreescriben cada vez.",
+s6_q7:"¿Es aceptable una puntuación de fortaleza \"Media\"?",
+s6_a7:"Para sitios no críticos, puntuación 2 (Media) es aceptable a corto plazo. Para email, banco, hosting: apunta a la puntuación 4 (Muy fuerte).",
+footer1:"Password Audit Guide · archivo local · ningún dato transmitido",
+footer2:"Usa esta guía con pwd_audit_gui.py",,
+code_win_check:"# debe mostrar Python 3.x.x",
+code_mac_check:"# si falta: brew install python3",
+code_run_win:"# Windows",
+code_run_nix:"# macOS / Linux / Raspi"
+};
+
+T['de']={
+guide_tag:"Visuelle Anleitung · Einsteiger",
+subtitle:"Exportiere, bereinige und importiere alle Passwörter in Proton Pass — Schritt für Schritt.",
+nav_overview:"Überblick",nav_python:"Python installieren",nav_export:"CSVs exportieren",
+nav_run:"Audit starten",nav_import:"Proton Pass importieren",nav_vaults:"Vaults organisieren",nav_faq:"FAQ",
+s0_label:"Überblick",s0_what_title:"🗺 Was wir tun werden",
+s0_what_body:"Du hast Passwörter in Chrome, Firefox, Opera, Safari, Vivaldi verteilt — einige seit 20 Jahren. Wir werden alles zusammenführen, sortieren, die Stärke jedes Passworts bewerten, tote Seiten erkennen — und alles in Proton Pass importieren.",
+s0_tools_title:"🧰 Benötigte Tools",s0_tools_python:"kostenlos, installieren falls fehlend",
+s0_tools_zxcvbn:"Passwortstärken-Scoring, 1 Befehl",s0_tools_script:"das Skript, das dieser Anleitung beiliegt",
+s0_local_tip:"Alles läuft lokal auf deinem Rechner — kein Passwort wird über das Internet gesendet.",
+s1_label:"Schritt 1 — Python & Bibliothek installieren",
+s1_win_desc:"1. Gehe zu python.org/downloads\n2. Python 3.12 herunterladen\n3. Installer ausführen — \"Add Python to PATH\" ankreuzen\n4. PowerShell öffnen und eingeben:",
+s1_mac_desc:"Python 3 ist auf aktuellem macOS bereits installiert.\nTerminal öffnen (Spotlight → \"Terminal\"):",
+s1_raspi_desc:"Python 3 ist in TwisterOS enthalten.\nTerminal öffnen:",
+s1_check_title:"✅ Alles überprüfen",s1_check_desc:"Im Terminal eingeben:",
+s1_check_result:"Du solltest sehen: zxcvbn OK\nBei Fehler → pip install erneut versuchen",
+s1_win_warn:"Unter Windows: Falls python nach der Installation nicht erkannt wird, PowerShell schließen und neu öffnen. Oder py statt python versuchen.",
+s2_label:"Schritt 2 — CSVs aus jedem Browser exportieren",
+s2_danger:"Wichtig: Exportierte CSVs enthalten alle Passwörter im Klartext. In einem dedizierten temporären Ordner ablegen und nach dem Import in Proton Pass löschen.",
+s2_chrome_path:"1. In die Adressleiste eingeben: chrome://password-manager/settings\n2. Abschnitt \"Gespeicherte Passwörter\"\n3. Schaltfläche ⋮ → Passwörter exportieren\n4. Mit Windows/Mac-Passwort bestätigen",
+s2_chrome_note:"Vivaldi, Opera, Chromium: gleiche Vorgehensweise via chrome://settings/passwords",
+s2_firefox_path:"1. In die Adressleiste eingeben: about:logins\n2. Schaltfläche ⋯ (oben rechts)\n3. Zugangsdaten exportieren\n4. Mit Systempasswort bestätigen",
+s2_firefox_note:"Firefox-Zeitstempel sind in Unix-Millisekunden — das Skript konvertiert sie automatisch.",
+s2_safari_path:"1. Safari-Menü → Einstellungen\n2. Reiter Passwörter\n3. Authentifizieren (Touch ID oder Mac-Passwort)\n4. Schaltfläche ⋯ unten → Alle Passwörter exportieren\n5. Passwords.csv speichern",
+s2_safari_note:"⚠️ iCloud Drive oder Time Machine vor dem Export deaktivieren.",
+s2_vivaldi_path:"1. Vivaldi-Menü → Datei → Exportieren → Passwörter exportieren\n— ODER — vivaldi://settings/privacy → Passwörter → Exportieren",
+s2_vivaldi_note:"Gleiches Format wie Chrome — wird automatisch erkannt.",
+s2_opera_path:"1. Einstellungen (Alt+P)\n2. Erweitert → Sicherheit\n3. Abschnitt Passwörter\n4. Passwörter exportieren",
+s2_opera_note:"Identisch mit Chrome Chromium-Format.",
+s2_proton_path:"1. Proton Pass-Erweiterung anklicken\n2. Menü ☰ → Einstellungen\n3. Reiter Export → CSV auswählen\n4. Exportieren klicken → Proton Pass-Passwort eingeben",
+s2_proton_note:"Nützlich zum Zusammenführen eines bestehenden Proton Pass-Exports mit anderen Browsern.",
+s2_folder_tip:"Alle CSVs in denselben Ordner legen, z.B. C:\\pwd_audit\\ unter Windows oder ~/pwd_audit/ auf Mac/Linux.",
+s3_label:"Schritt 3 — pwd_audit_gui.py starten",
+s3_step1_h:"Skriptdatei kopieren",s3_step1_p:"pwd_audit_gui.py in denselben Ordner wie die CSVs legen, oder irgendwo auf der Festplatte.",
+s3_step2_h:"Terminal in diesem Ordner öffnen",
+s3_step2_p:"Windows: Shift+Rechtsklick → \"PowerShell-Fenster hier öffnen\"\nmacOS: Rechtsklick auf Ordner → \"Neues Terminal im Ordner\"\nLinux/Raspi: Rechtsklick → \"Im Terminal öffnen\"",
+s3_step3_h:"Skript starten",s3_step3_p:"Ein Fenster öffnet sich — das ist die grafische Oberfläche.",
+s3_step4_h:"Reiter 📂 CSV-Dateien",s3_step4_p:"\"CSV(s) hinzufügen\" klicken und alle exportierten Dateien auswählen.",
+s3_step5_h:"Reiter 🔍 Audit → Starten",s3_step5_p:"Ausgabeordner wählen. Option \"Tote Domains prüfen\" aktiviert lassen. \"Audit starten\" klicken. Geschätzte Dauer: 2–5 Minuten.",
+s3_output_title:"📊 Generierte Dateien",
+s3_output_clean:"passwords_clean.csv — alle sortierten Einträge mit Stärkebewertung und Site-Status. Diese Datei in Proton Pass importieren.",
+s3_output_dead:"sites_dead.csv — Domains, die nicht antworteten. Diese Konten sind wahrscheinlich veraltet.",
+s3_output_review:"sites_to_review.csv — zweideutige Domains. Manuell prüfen.",
+s4_label:"Schritt 4 — In Proton Pass importieren",s4_format_title:"🔑 Von Proton Pass erwartetes Format (Generic CSV)",
+s4_format_desc:"Proton Pass akzeptiert eine CSV mit genau diesen Spalten (das Skript generiert sie automatisch):",
+s4_col_col:"Spalte",s4_col_req:"Pflichtfeld",s4_col_desc:"Beschreibung",s4_col_ex:"Beispiel",
+s4_required:"Pflicht",s4_required2:"Pflicht",s4_required3:"Pflicht",s4_required4:"Pflicht",
+s4_optional:"Optional",s4_optional2:"Optional",s4_optional3:"Optional",s4_optional4:"Optional",
+s4_name_desc:"Eintragsname/-bezeichnung",s4_url_desc:"Vollständige URL der Seite",s4_username_desc:"Benutzername",
+s4_password_desc:"Passwort",s4_email_desc:"Zugehörige E-Mail",s4_note_desc:"Freie Notizen",
+s4_totp_desc:"2FA-Geheimnis (otpauth://-Format)",s4_vault_desc:"Ziel-Vault",
+s4_step1_h:"Proton Pass öffnen",s4_step1_p:"Im Browser auf die Proton Pass-Erweiterung klicken — oder pass.proton.me aufrufen",
+s4_step2_h:"Einstellungen → Import",s4_step2_p:"Menü ☰ → Einstellungen → Abschnitt Import",
+s4_step3_h:"\"Generic CSV\" auswählen",s4_step3_p:"Generic CSV aus der Quellenliste wählen. Datei auswählen klicken und passwords_clean.csv wählen.",
+s4_step4_h:"Ziel-Vault auswählen",s4_step4_p:"Bestehenden Vault wählen oder neuen erstellen (z.B. \"Import Browser\"). Später neu organisierbar.",
+s4_step5_h:"Bestätigen und prüfen",s4_step5_p:"Importieren klicken. Eintragsanzahl überprüfen. Dann: Quell-CSVs von der Festplatte löschen.",
+s4_delete_warn:"Alle CSVs (exportierte + generierte) nach dem Import löschen. Es sind Klartextdateien mit allen Passwörtern.",
+s5_label:"Schritt 5 — Vaults in Proton Pass organisieren",
+s5_intro:"Nach dem Import Konten in thematische Vaults aufteilen:",
+s5_v_critical:"Haupt-E-Mail, Bank, Proton, Hosting, Domains, GitHub",
+s5_v_work:"APIs, Server, DNS, Registrare, Dev-Tools, Hosting",
+s5_v_personal:"Soziale Netzwerke, Shopping, Streaming, alltägliche Dienste",
+s5_v_old:"Zweifelhafte Konten, möglicherweise tote Seiten, schrittweise prüfen",
+s5_v_shared:"Gemeinsamer Zugang Familie/Team",
+s5_labels_tip:"Nützliche Labels in Proton Pass: 2FA-enabled, pwd-to-change, pwd-reused, hibp-compromised",
+s5_strategy_title:"📅 Strategie zum Passwortwechsel",
+s5_strategy_intro:"Nicht alles auf einmal ändern — du wirst aufgeben. Progressiver Ansatz:",
+s5_week1:"🔴 Woche 1: Nur Critical (E-Mail, Bank, Proton selbst)",
+s5_week2:"🟡 Woche 2–3: Konten mit Bewertung 0–1 auf aktiven Seiten",
+s5_ongoing:"🔄 Laufend: Bei jeder Anmeldung → Proton Pass ein neues starkes Passwort (20+ Zeichen) generieren lassen",
+s6_label:"FAQ — Häufig gestellte Fragen",
+s6_q1:"Kann das Skript meine Passwörter stehlen?",
+s6_a1:"Nein. Das Skript läuft vollständig lokal. Es macht keine Netzwerkanfragen außer um zu prüfen, ob Domains (nicht Passwörter) antworten.",
+s6_q2:"Meine CSV wird nicht erkannt — was tun?",
+s6_a2:"Das Skript erkennt Chrome/Firefox automatisch. Falls deine CSV andere Spalten hat, in Excel öffnen und in name, url, username, password umbenennen.",
+s6_q3:"Warum erscheinen manche aktiven Seiten als \"dead\"?",
+s6_a3:"Ca. 20–30% der Prüfungen ergeben falsche Positive. Eine Seite kann Bots blockieren (403), einen Netzwerk-Timeout haben oder Cloudflare verwenden.",
+s6_q4:"Wie installiert man Python auf Raspberry Pi TwisterOS?",
+s6_a4:"Python 3 ist in TwisterOS bereits installiert. Terminal: python3 --version, dann pip3 install zxcvbn --break-system-packages, dann python3 pwd_audit_gui.py.",
+s6_q5:"Tor Browser und andere spezielle Browser?",
+s6_a5:"Tor Browser basiert auf Firefox — sein CSV hat dasselbe Format. Das Skript erkennt es automatisch.",
+s6_q6:"Kann ich den Audit mehrmals ausführen?",
+s6_a6:"Ja, so oft wie gewünscht. Ausgabedateien werden jedes Mal überschrieben.",
+s6_q7:"Ist eine \"Mittlere\" Stärkebewertung akzeptabel?",
+s6_a7:"Für unkritische Seiten ist Bewertung 2 (Mittel) kurzfristig akzeptabel. Für E-Mail, Bank, Hosting: Bewertung 4 (Sehr stark) anstreben.",
+footer1:"Password Audit Guide · lokale Datei · keine Daten übertragen",
+footer2:"Diese Anleitung mit pwd_audit_gui.py verwenden",,
+code_win_check:"# zeigt Python 3.x.x",
+code_mac_check:"# falls fehlend: brew install python3",
+code_run_win:"# Windows",
+code_run_nix:"# macOS / Linux / Raspi"
+};
+
+T['it']={
+guide_tag:"Guida Visiva · Principiante",
+subtitle:"Esporta, pulisci e importa tutte le password in Proton Pass — passo dopo passo.",
+nav_overview:"Panoramica",nav_python:"Installare Python",nav_export:"Esportare CSV",
+nav_run:"Avviare l'audit",nav_import:"Importare in Proton Pass",nav_vaults:"Organizzare i Vault",nav_faq:"FAQ",
+s0_label:"Panoramica",s0_what_title:"🗺 Cosa faremo",
+s0_what_body:"Hai password sparse in Chrome, Firefox, Opera, Safari, Vivaldi… alcune di 20 anni fa. Le uniremo, ordineremo, valuteremo la forza di ogni pwd, rileveremo i siti morti — e importeremo tutto in Proton Pass.",
+s0_tools_title:"🧰 Strumenti necessari",s0_tools_python:"gratuito, installare se mancante",
+s0_tools_zxcvbn:"punteggio forza password, 1 comando",s0_tools_script:"lo script incluso in questa guida",
+s0_local_tip:"Tutto gira localmente sulla tua macchina — nessuna password viene inviata su internet.",
+s1_label:"Passo 1 — Installare Python e la libreria",
+s1_win_desc:"1. Vai su python.org/downloads\n2. Scarica Python 3.12\n3. Esegui l'installer — spunta \"Add Python to PATH\"\n4. Apri PowerShell e digita:",
+s1_mac_desc:"Python 3 è già installato su macOS recente.\nApri il Terminale (Spotlight → \"Terminale\"):",
+s1_raspi_desc:"Python 3 è incluso in TwisterOS.\nApri un terminale:",
+s1_check_title:"✅ Verificare che tutto funzioni",s1_check_desc:"Nel terminale, copia e incolla:",
+s1_check_result:"Dovresti vedere: zxcvbn OK\nSe errore → riprova pip install",
+s1_win_warn:"Su Windows, se python non viene riconosciuto dopo l'installazione, chiudi e riapri PowerShell. O prova py invece di python.",
+s2_label:"Passo 2 — Esportare i CSV da ogni browser",
+s2_danger:"Importante: i CSV esportati contengono tutte le password in chiaro. Mettili in una cartella temporanea dedicata ed eliminali dopo l'importazione in Proton Pass.",
+s2_chrome_path:"1. Digita nella barra: chrome://password-manager/settings\n2. Sezione \"Password salvate\"\n3. Pulsante ⋮ → Esporta password\n4. Conferma con la tua password Windows/Mac",
+s2_chrome_note:"Vivaldi, Opera, Chromium: stessa procedura via chrome://settings/passwords",
+s2_firefox_path:"1. Digita: about:logins\n2. Pulsante ⋯ (in alto a destra)\n3. Esporta accessi\n4. Conferma con la tua password di sistema",
+s2_firefox_note:"I timestamp di Firefox sono in millisecondi Unix — lo script li converte automaticamente.",
+s2_safari_path:"1. Menu Safari → Impostazioni\n2. Scheda Password\n3. Autenticati (Touch ID o password Mac)\n4. Pulsante ⋯ in basso → Esporta tutte le password\n5. Salva il file Passwords.csv",
+s2_safari_note:"⚠️ Disabilita iCloud Drive o Time Machine prima di esportare.",
+s2_vivaldi_path:"1. Menu Vivaldi → File → Esporta password\n— OPPURE — vivaldi://settings/privacy → Password → Esporta",
+s2_vivaldi_note:"Stesso formato di Chrome — rilevato automaticamente.",
+s2_opera_path:"1. Impostazioni (Alt+P)\n2. Avanzate → Sicurezza\n3. Sezione Password\n4. Esporta password",
+s2_opera_note:"Identico al formato Chrome Chromium.",
+s2_proton_path:"1. Clicca sull'estensione Proton Pass\n2. Menu ☰ → Impostazioni\n3. Scheda Esporta → seleziona CSV\n4. Clicca Esporta → inserisci la tua password Proton Pass",
+s2_proton_note:"Utile per consolidare un'esportazione Proton Pass esistente con altri browser.",
+s2_folder_tip:"Metti tutti i tuoi CSV nella stessa cartella, es. C:\\pwd_audit\\ su Windows o ~/pwd_audit/ su Mac/Linux.",
+s3_label:"Passo 3 — Avviare pwd_audit_gui.py",
+s3_step1_h:"Copia il file script",s3_step1_p:"Posiziona pwd_audit_gui.py nella stessa cartella dei tuoi CSV, o ovunque sul disco.",
+s3_step2_h:"Apri un terminale in quella cartella",
+s3_step2_p:"Windows: Shift+clic destro → \"Apri finestra PowerShell qui\"\nmacOS: clic destro sulla cartella → \"Nuovo terminale nella cartella\"\nLinux/Raspi: clic destro → \"Apri nel terminale\"",
+s3_step3_h:"Avvia lo script",s3_step3_p:"Si apre una finestra — è l'interfaccia grafica.",
+s3_step4_h:"Scheda 📂 File CSV",s3_step4_p:"Clicca \"Aggiungi CSV\" e seleziona tutti i file esportati.",
+s3_step5_h:"Scheda 🔍 Audit → Avvia",s3_step5_p:"Scegli la cartella di output. Lascia spuntata \"Verifica domini morti\". Clicca \"Avvia Audit\". Durata stimata: 2–5 minuti.",
+s3_output_title:"📊 File generati",
+s3_output_clean:"passwords_clean.csv — tutte le voci ordinate con punteggio forza e stato del sito. Questo è il file da importare in Proton Pass.",
+s3_output_dead:"sites_dead.csv — domini che non hanno risposto. Questi account sono probabilmente obsoleti.",
+s3_output_review:"sites_to_review.csv — domini ambigui. Verificare manualmente.",
+s4_label:"Passo 4 — Importare in Proton Pass",s4_format_title:"🔑 Formato atteso da Proton Pass (Generic CSV)",
+s4_format_desc:"Proton Pass accetta un CSV con esattamente queste colonne (lo script le genera automaticamente):",
+s4_col_col:"Colonna",s4_col_req:"Obbligatorio",s4_col_desc:"Descrizione",s4_col_ex:"Esempio",
+s4_required:"Richiesto",s4_required2:"Richiesto",s4_required3:"Richiesto",s4_required4:"Richiesto",
+s4_optional:"Facoltativo",s4_optional2:"Facoltativo",s4_optional3:"Facoltativo",s4_optional4:"Facoltativo",
+s4_name_desc:"Nome/etichetta voce",s4_url_desc:"URL completo del sito",s4_username_desc:"Nome utente",
+s4_password_desc:"Password",s4_email_desc:"Email associata",s4_note_desc:"Note libere",
+s4_totp_desc:"Segreto 2FA (formato otpauth://)",s4_vault_desc:"Vault di destinazione",
+s4_step1_h:"Apri Proton Pass",s4_step1_p:"Nel browser, clicca sull'estensione Proton Pass — o vai su pass.proton.me",
+s4_step2_h:"Impostazioni → Importa",s4_step2_p:"Clicca sul menu ☰ → Impostazioni → sezione Importa",
+s4_step3_h:"Seleziona \"Generic CSV\"",s4_step3_p:"Dall'elenco sorgenti, scegli Generic CSV. Clicca Scegli file e seleziona passwords_clean.csv.",
+s4_step4_h:"Scegli il vault di destinazione",s4_step4_p:"Seleziona un vault esistente o creane uno nuovo. Potrai riorganizzare in seguito.",
+s4_step5_h:"Conferma e verifica",s4_step5_p:"Clicca Importa. Verifica che il numero di voci corrisponda. Poi: elimina i CSV sorgente dal disco.",
+s4_delete_warn:"Elimina tutti i CSV (esportati + generati) dopo l'importazione. Sono file in chiaro con tutte le password.",
+s5_label:"Passo 5 — Organizzare i Vault in Proton Pass",
+s5_intro:"Una volta importato, distribuisci gli account in vault tematici:",
+s5_v_critical:"Email principale, banca, Proton, hosting, domini, GitHub",
+s5_v_work:"API, server, DNS, registrar, strumenti dev, hosting",
+s5_v_personal:"Social media, shopping, streaming, servizi quotidiani",
+s5_v_old:"Account dubbi, siti forse morti, verificare progressivamente",
+s5_v_shared:"Accesso condiviso famiglia/team",
+s5_labels_tip:"Etichette utili in Proton Pass: 2FA-enabled, pwd-to-change, pwd-reused, hibp-compromised",
+s5_strategy_title:"📅 Strategia di cambio password",
+s5_strategy_intro:"Non cambiare tutto in una volta — ti arrenderai. Approccio progressivo:",
+s5_week1:"🔴 Settimana 1: Solo Critical (email, banca, Proton stesso)",
+s5_week2:"🟡 Settimane 2–3: Account con punteggio 0–1 su siti attivi",
+s5_ongoing:"🔄 In corso: Ad ogni accesso → lascia che Proton Pass generi una nuova pwd forte (20+ caratteri)",
+s6_label:"FAQ — Domande frequenti",
+s6_q1:"Lo script può rubare le mie password?",
+s6_a1:"No. Lo script gira interamente in locale. Non fa richieste di rete eccetto per verificare se i domini (non le password) rispondono.",
+s6_q2:"Il mio CSV non viene riconosciuto — cosa fare?",
+s6_a2:"Lo script rileva automaticamente Chrome/Firefox. Se il tuo CSV ha colonne diverse, aprilo in Excel e rinomina le colonne in name, url, username, password.",
+s6_q3:"Perché alcuni siti attivi appaiono come \"dead\"?",
+s6_a3:"Circa il 20–30% delle verifiche danno falsi positivi. Un sito può bloccare i bot (403), avere un timeout di rete, o usare Cloudflare.",
+s6_q4:"Come installare Python su Raspberry Pi TwisterOS?",
+s6_a4:"Python 3 è già installato su TwisterOS. Terminal: python3 --version, poi pip3 install zxcvbn --break-system-packages, poi python3 pwd_audit_gui.py.",
+s6_q5:"Tor Browser e altri browser speciali?",
+s6_a5:"Tor Browser è basato su Firefox — stesso formato CSV. Lo script lo rileva automaticamente.",
+s6_q6:"Posso eseguire l'audit più volte?",
+s6_a6:"Sì, quante volte vuoi. I file di output vengono sovrascritti ogni volta.",
+s6_q7:"È accettabile un punteggio di forza \"Medio\"?",
+s6_a7:"Per siti non critici, il punteggio 2 (Medio) è accettabile a breve termine. Per email, banca, hosting: punta al punteggio 4 (Molto forte).",
+footer1:"Password Audit Guide · file locale · nessun dato trasmesso",
+footer2:"Usa questa guida con pwd_audit_gui.py",,
+code_win_check:"# deve mostrare Python 3.x.x",
+code_mac_check:"# se mancante: brew install python3",
+code_run_win:"# Windows",
+code_run_nix:"# macOS / Linux / Raspi"
+};
+
+T['pt']={
+guide_tag:"Guia Visual · Iniciante",subtitle:"Exporta, limpa e importa todas as palavras-passe para Proton Pass — passo a passo.",
+nav_overview:"Visão geral",nav_python:"Instalar Python",nav_export:"Exportar CSVs",nav_run:"Executar auditoria",nav_import:"Importar Proton Pass",nav_vaults:"Organizar Vaults",nav_faq:"FAQ",
+s0_label:"Visão geral",s0_what_title:"🗺 O que vamos fazer",s0_what_body:"Tens palavras-passe espalhadas pelo Chrome, Firefox, Opera, Safari, Vivaldi… algumas de há 20 anos. Vamos fundir tudo, ordenar, avaliar a força de cada pwd, detetar sites mortos — e importar tudo para o Proton Pass.",
+s0_tools_title:"🧰 Ferramentas necessárias",s0_tools_python:"gratuito, instalar se em falta",s0_tools_zxcvbn:"pontuação de força, 1 comando",s0_tools_script:"o script incluído neste guia",s0_local_tip:"Tudo corre localmente na tua máquina — nenhuma palavra-passe é enviada pela internet.",
+s1_label:"Passo 1 — Instalar Python e a biblioteca",s1_win_desc:"1. Vai a python.org/downloads\n2. Descarrega Python 3.12\n3. Executa o instalador — marca \"Add Python to PATH\"\n4. Abre PowerShell e escreve:",s1_mac_desc:"Python 3 já está instalado no macOS recente.\nAbre o Terminal (Spotlight → \"Terminal\"):",s1_raspi_desc:"Python 3 está incluído no TwisterOS.\nAbre um terminal:",s1_check_title:"✅ Verificar que tudo funciona",s1_check_desc:"No terminal, copia e cola:",s1_check_result:"Deves ver: zxcvbn OK\nSe erro → tenta novamente pip install",s1_win_warn:"No Windows, se python não for reconhecido após instalação, fecha e reabre o PowerShell. Ou tenta py em vez de python.",
+s2_label:"Passo 2 — Exportar CSVs de cada browser",s2_danger:"Importante: os CSVs exportados contêm todas as palavras-passe em texto simples. Coloca-os numa pasta temporária dedicada e elimina-os após a importação no Proton Pass.",
+s2_chrome_path:"1. Escreve na barra: chrome://password-manager/settings\n2. Secção \"Palavras-passe guardadas\"\n3. Botão ⋮ → Exportar palavras-passe\n4. Confirma com a tua palavra-passe Windows/Mac",s2_chrome_note:"Vivaldi, Opera, Chromium: mesmo procedimento via chrome://settings/passwords",s2_firefox_path:"1. Escreve: about:logins\n2. Botão ⋯ (canto superior direito)\n3. Exportar inícios de sessão\n4. Confirma com a tua palavra-passe do sistema",s2_firefox_note:"Os timestamps do Firefox estão em milissegundos Unix — o script converte-os automaticamente.",s2_safari_path:"1. Menu Safari → Definições\n2. Separador Palavras-passe\n3. Autentica-te (Touch ID ou palavra-passe Mac)\n4. Botão ⋯ em baixo → Exportar todas as palavras-passe\n5. Guarda o ficheiro Passwords.csv",s2_safari_note:"⚠️ Desativa iCloud Drive ou Time Machine antes de exportar.",s2_vivaldi_path:"1. Menu Vivaldi → Ficheiro → Exportar palavras-passe\n— OU — vivaldi://settings/privacy → Palavras-passe → Exportar",s2_vivaldi_note:"Mesmo formato que Chrome — detetado automaticamente.",s2_opera_path:"1. Definições (Alt+P)\n2. Avançado → Segurança\n3. Secção Palavras-passe\n4. Exportar palavras-passe",s2_opera_note:"Idêntico ao formato Chrome Chromium.",s2_proton_path:"1. Clica na extensão Proton Pass\n2. Menu ☰ → Definições\n3. Separador Exportar → seleciona CSV\n4. Clica Exportar → introduz a tua palavra-passe Proton Pass",s2_proton_note:"Útil para consolidar uma exportação Proton Pass existente com outros browsers.",s2_folder_tip:"Coloca todos os teus CSVs na mesma pasta, por exemplo C:\\pwd_audit\\ no Windows ou ~/pwd_audit/ no Mac/Linux.",
+s3_label:"Passo 3 — Executar pwd_audit_gui.py",s3_step1_h:"Copia o ficheiro script",s3_step1_p:"Coloca pwd_audit_gui.py na mesma pasta dos teus CSVs, ou em qualquer lugar no disco.",s3_step2_h:"Abre um terminal nessa pasta",s3_step2_p:"Windows: Shift+clique direito → \"Abrir janela PowerShell aqui\"\nmacOS: clique direito na pasta → \"Novo Terminal na Pasta\"\nLinux/Raspi: clique direito → \"Abrir no Terminal\"",s3_step3_h:"Executa o script",s3_step3_p:"Abre-se uma janela — é a interface gráfica.",s3_step4_h:"Separador 📂 Ficheiros CSV",s3_step4_p:"Clica em \"Adicionar CSV(s)\" e seleciona todos os ficheiros exportados.",s3_step5_h:"Separador 🔍 Auditoria → Iniciar",s3_step5_p:"Escolhe a pasta de saída. Mantém marcada a opção \"Verificar domínios mortos\". Clica em \"Iniciar Auditoria\". Duração estimada: 2–5 minutos.",
+s3_output_title:"📊 Ficheiros gerados",s3_output_clean:"passwords_clean.csv — todas as entradas ordenadas com pontuação de força e estado do site. Este é o ficheiro a importar no Proton Pass.",s3_output_dead:"sites_dead.csv — domínios que não responderam. Estas contas estão provavelmente obsoletas.",s3_output_review:"sites_to_review.csv — domínios ambíguos. Verificar manualmente.",
+s4_label:"Passo 4 — Importar no Proton Pass",s4_format_title:"🔑 Formato esperado pelo Proton Pass (Generic CSV)",s4_format_desc:"O Proton Pass aceita um CSV com exatamente estas colunas (o script gera-as automaticamente):",s4_col_col:"Coluna",s4_col_req:"Obrigatório",s4_col_desc:"Descrição",s4_col_ex:"Exemplo",s4_required:"Obrigatório",s4_required2:"Obrigatório",s4_required3:"Obrigatório",s4_required4:"Obrigatório",s4_optional:"Opcional",s4_optional2:"Opcional",s4_optional3:"Opcional",s4_optional4:"Opcional",s4_name_desc:"Nome/etiqueta da entrada",s4_url_desc:"URL completo do site",s4_username_desc:"Nome de utilizador",s4_password_desc:"Palavra-passe",s4_email_desc:"Email associado",s4_note_desc:"Notas livres",s4_totp_desc:"Segredo 2FA (formato otpauth://)",s4_vault_desc:"Vault de destino",
+s4_step1_h:"Abre o Proton Pass",s4_step1_p:"No browser, clica na extensão Proton Pass — ou vai a pass.proton.me",s4_step2_h:"Definições → Importar",s4_step2_p:"Clica no menu ☰ → Definições → secção Importar",s4_step3_h:"Seleciona \"Generic CSV\"",s4_step3_p:"Da lista de fontes, escolhe Generic CSV. Clica em Escolher ficheiro e seleciona o teu passwords_clean.csv.",s4_step4_h:"Escolhe o vault de destino",s4_step4_p:"Seleciona um vault existente ou cria um novo. Podes reorganizar depois.",s4_step5_h:"Confirma e verifica",s4_step5_p:"Clica em Importar. Verifica que o número de entradas corresponde. Depois: elimina os CSVs fonte do disco.",s4_delete_warn:"Elimina todos os CSVs (exportados + gerados) após a importação. São ficheiros em texto simples com todas as palavras-passe.",
+s5_label:"Passo 5 — Organizar os Vaults no Proton Pass",s5_intro:"Após a importação, distribui as contas em vaults temáticos:",s5_v_critical:"Email principal, banco, Proton, alojamento, domínios, GitHub",s5_v_work:"APIs, servidores, DNS, registrars, ferramentas dev, hosting",s5_v_personal:"Redes sociais, compras, streaming, serviços quotidianos",s5_v_old:"Contas duvidosas, sites possivelmente mortos, verificar progressivamente",s5_v_shared:"Acesso partilhado família/equipa",s5_labels_tip:"Etiquetas úteis no Proton Pass: 2FA-enabled, pwd-to-change, pwd-reused, hibp-compromised",s5_strategy_title:"📅 Estratégia de mudança de palavras-passe",s5_strategy_intro:"Não mudes tudo de uma vez — vais desistir. Abordagem progressiva:",s5_week1:"🔴 Semana 1: Só Critical (email, banco, Proton mesmo)",s5_week2:"🟡 Semanas 2–3: Contas com pontuação 0–1 em sites ativos",s5_ongoing:"🔄 Em curso: A cada início de sessão → deixa o Proton Pass gerar uma nova pwd forte (20+ carateres)",
+s6_label:"FAQ — Perguntas frequentes",s6_q1:"O script pode roubar as minhas palavras-passe?",s6_a1:"Não. O script corre inteiramente em local. Não faz pedidos de rede exceto para verificar se os domínios (não as palavras-passe) respondem.",s6_q2:"O meu CSV não é reconhecido — o que fazer?",s6_a2:"O script deteta automaticamente Chrome/Firefox. Se o teu CSV tem colunas diferentes, abre-o no Excel e renomeia as colunas para name, url, username, password.",s6_q3:"Porque é que alguns sites ativos aparecem como \"dead\"?",s6_a3:"Cerca de 20–30% das verificações dão falsos positivos. Um site pode bloquear bots (403), ter um timeout de rede, ou usar Cloudflare.",s6_q4:"Como instalar Python no Raspberry Pi TwisterOS?",s6_a4:"Python 3 já está instalado no TwisterOS. Terminal: python3 --version, depois pip3 install zxcvbn --break-system-packages, depois python3 pwd_audit_gui.py.",s6_q5:"Tor Browser e outros browsers especiais?",s6_a5:"Tor Browser é baseado no Firefox — mesmo formato CSV. O script deteta-o automaticamente.",s6_q6:"Posso executar a auditoria várias vezes?",s6_a6:"Sim, quantas vezes quiseres. Os ficheiros de saída são substituídos cada vez.",s6_q7:"É aceitável uma pontuação de força \"Média\"?",s6_a7:"Para sites não críticos, a pontuação 2 (Média) é aceitável a curto prazo. Para email, banco, alojamento: aponta para a pontuação 4 (Muito forte).",
+footer1:"Password Audit Guide · ficheiro local · nenhum dado transmitido",footer2:"Usa este guia com pwd_audit_gui.py",,
+code_win_check:"# deve mostrar Python 3.x.x",
+code_mac_check:"# se ausente: brew install python3",
+code_run_win:"# Windows",
+code_run_nix:"# macOS / Linux / Raspi"
+};
+
+T['ru']={
+guide_tag:"Визуальное руководство · Для начинающих",subtitle:"Экспортируй, очищай и импортируй все пароли в Proton Pass — шаг за шагом.",
+nav_overview:"Обзор",nav_python:"Установить Python",nav_export:"Экспорт CSV",nav_run:"Запустить аудит",nav_import:"Импорт Proton Pass",nav_vaults:"Организация Vault",nav_faq:"FAQ",
+s0_label:"Обзор",s0_what_title:"🗺 Что мы будем делать",s0_what_body:"У тебя пароли разбросаны по Chrome, Firefox, Opera, Safari, Vivaldi… некоторые хранятся уже 20 лет. Мы объединим всё, отсортируем, оценим надёжность каждого пароля, обнаружим недействующие сайты — и импортируем всё в Proton Pass.",
+s0_tools_title:"🧰 Необходимые инструменты",s0_tools_python:"бесплатно, установить если отсутствует",s0_tools_zxcvbn:"оценка надёжности паролей, 1 команда",s0_tools_script:"скрипт, включённый в это руководство",s0_local_tip:"Всё работает локально на твоей машине — никакие пароли не отправляются в интернет.",
+s1_label:"Шаг 1 — Установить Python и библиотеку",s1_win_desc:"1. Перейди на python.org/downloads\n2. Загрузи Python 3.12\n3. Запусти установщик — отметь \"Add Python to PATH\"\n4. Открой PowerShell и введи:",s1_mac_desc:"Python 3 уже установлен на современном macOS.\nОткрой Терминал (Spotlight → \"Терминал\"):",s1_raspi_desc:"Python 3 включён в TwisterOS.\nОткрой терминал:",s1_check_title:"✅ Проверить что всё работает",s1_check_desc:"В терминале скопируй и вставь:",s1_check_result:"Ты должен увидеть: zxcvbn OK\nЕсли ошибка → повтори pip install",s1_win_warn:"В Windows, если python не распознаётся после установки, закрой и снова открой PowerShell. Или попробуй py вместо python.",
+s2_label:"Шаг 2 — Экспорт CSV из каждого браузера",s2_danger:"Важно: экспортированные CSV содержат все твои пароли в открытом виде. Помести их во временную папку и удали после импорта в Proton Pass.",
+s2_chrome_path:"1. Введи в адресной строке: chrome://password-manager/settings\n2. Раздел \"Сохранённые пароли\"\n3. Кнопка ⋮ → Экспортировать пароли\n4. Подтверди паролем Windows/Mac",s2_chrome_note:"Vivaldi, Opera, Chromium: та же процедура через chrome://settings/passwords",s2_firefox_path:"1. Введи: about:logins\n2. Кнопка ⋯ (вверху справа)\n3. Экспортировать учётные данные\n4. Подтверди системным паролем",s2_firefox_note:"Временны́е метки Firefox указаны в миллисекундах Unix — скрипт конвертирует их автоматически.",s2_safari_path:"1. Меню Safari → Настройки\n2. Вкладка Пароли\n3. Аутентификация (Touch ID или пароль Mac)\n4. Кнопка ⋯ внизу → Экспортировать все пароли\n5. Сохрани файл Passwords.csv",s2_safari_note:"⚠️ Отключи iCloud Drive или Time Machine перед экспортом.",s2_vivaldi_path:"1. Меню Vivaldi → Файл → Экспортировать пароли\n— ИЛИ — vivaldi://settings/privacy → Пароли → Экспортировать",s2_vivaldi_note:"Тот же формат что и Chrome — определяется автоматически.",s2_opera_path:"1. Настройки (Alt+P)\n2. Дополнительно → Безопасность\n3. Раздел Пароли\n4. Экспортировать пароли",s2_opera_note:"Идентично формату Chrome Chromium.",s2_proton_path:"1. Нажми на расширение Proton Pass\n2. Меню ☰ → Настройки\n3. Вкладка Экспорт → выбери CSV\n4. Нажми Экспортировать → введи пароль Proton Pass",s2_proton_note:"Полезно для объединения существующего экспорта Proton Pass с другими браузерами.",s2_folder_tip:"Помести все CSV в одну папку, например C:\\pwd_audit\\ в Windows или ~/pwd_audit/ на Mac/Linux.",
+s3_label:"Шаг 3 — Запустить pwd_audit_gui.py",s3_step1_h:"Скопируй файл скрипта",s3_step1_p:"Помести pwd_audit_gui.py в ту же папку что и CSV, или в любое место на диске.",s3_step2_h:"Открой терминал в этой папке",s3_step2_p:"Windows: Shift+правый клик → \"Открыть окно PowerShell здесь\"\nmacOS: правый клик на папке → \"Новый терминал в папке\"\nLinux/Raspi: правый клик → \"Открыть в терминале\"",s3_step3_h:"Запусти скрипт",s3_step3_p:"Открывается окно — это графический интерфейс.",s3_step4_h:"Вкладка 📂 CSV файлы",s3_step4_p:"Нажми \"Добавить CSV\" и выбери все экспортированные файлы.",s3_step5_h:"Вкладка 🔍 Аудит → Запустить",s3_step5_p:"Выбери папку вывода. Оставь отмеченным \"Проверить мёртвые домены\". Нажми \"Запустить аудит\". Примерное время: 2–5 минут.",
+s3_output_title:"📊 Сгенерированные файлы",s3_output_clean:"passwords_clean.csv — все отсортированные записи с оценкой надёжности и статусом сайта. Этот файл импортируется в Proton Pass.",s3_output_dead:"sites_dead.csv — домены, которые не ответили. Эти аккаунты вероятно устарели.",s3_output_review:"sites_to_review.csv — неоднозначные домены. Проверить вручную.",
+s4_label:"Шаг 4 — Импорт в Proton Pass",s4_format_title:"🔑 Ожидаемый формат Proton Pass (Generic CSV)",s4_format_desc:"Proton Pass принимает CSV с точно такими столбцами (скрипт генерирует их автоматически):",s4_col_col:"Столбец",s4_col_req:"Обязательно",s4_col_desc:"Описание",s4_col_ex:"Пример",s4_required:"Обязательно",s4_required2:"Обязательно",s4_required3:"Обязательно",s4_required4:"Обязательно",s4_optional:"Необязательно",s4_optional2:"Необязательно",s4_optional3:"Необязательно",s4_optional4:"Необязательно",s4_name_desc:"Название/метка записи",s4_url_desc:"Полный URL сайта",s4_username_desc:"Имя пользователя",s4_password_desc:"Пароль",s4_email_desc:"Связанный email",s4_note_desc:"Свободные заметки",s4_totp_desc:"Секрет 2FA (формат otpauth://)",s4_vault_desc:"Целевой vault",
+s4_step1_h:"Открой Proton Pass",s4_step1_p:"В браузере нажми на расширение Proton Pass — или перейди на pass.proton.me",s4_step2_h:"Настройки → Импорт",s4_step2_p:"Нажми меню ☰ → Настройки → раздел Импорт",s4_step3_h:"Выбери \"Generic CSV\"",s4_step3_p:"Из списка источников выбери Generic CSV. Нажми Выбрать файл и выбери passwords_clean.csv.",s4_step4_h:"Выбери целевой vault",s4_step4_p:"Выбери существующий vault или создай новый. Реорганизовать можно потом.",s4_step5_h:"Подтверди и проверь",s4_step5_p:"Нажми Импортировать. Проверь, что количество записей совпадает. Затем: удали исходные CSV с диска.",s4_delete_warn:"Удали все CSV (экспортированные + сгенерированные) после импорта. Это файлы с паролями в открытом виде.",
+s5_label:"Шаг 5 — Организация Vault в Proton Pass",s5_intro:"После импорта распредели аккаунты по тематическим vault:",s5_v_critical:"Основной email, банк, Proton, хостинг, домены, GitHub",s5_v_work:"API, серверы, DNS, регистраторы, инструменты разработки",s5_v_personal:"Соцсети, шопинг, стриминг, повседневные сервисы",s5_v_old:"Сомнительные аккаунты, возможно недействующие сайты",s5_v_shared:"Общий доступ семья/команда",s5_labels_tip:"Полезные метки в Proton Pass: 2FA-enabled, pwd-to-change, pwd-reused, hibp-compromised",s5_strategy_title:"📅 Стратегия смены паролей",s5_strategy_intro:"Не меняй всё сразу — сдашься. Постепенный подход:",s5_week1:"🔴 Неделя 1: Только Critical (email, банк, сам Proton)",s5_week2:"🟡 Недели 2–3: Аккаунты с оценкой 0–1 на активных сайтах",s5_ongoing:"🔄 Постоянно: При каждом входе → пусть Proton Pass генерирует новый сильный пароль (20+ символов)",
+s6_label:"FAQ — Часто задаваемые вопросы",s6_q1:"Может ли скрипт украсть мои пароли?",s6_a1:"Нет. Скрипт работает полностью локально. Он не делает сетевых запросов кроме проверки того, отвечают ли домены (не пароли).",s6_q2:"Мой CSV не распознаётся — что делать?",s6_a2:"Скрипт автоматически определяет Chrome/Firefox. Если твой CSV имеет другие столбцы, открой его в Excel и переименуй столбцы в name, url, username, password.",s6_q3:"Почему некоторые активные сайты отображаются как \"dead\"?",s6_a3:"Около 20–30% проверок дают ложные срабатывания. Сайт может блокировать ботов (403), иметь сетевой таймаут или использовать Cloudflare.",s6_q4:"Как установить Python на Raspberry Pi TwisterOS?",s6_a4:"Python 3 уже установлен на TwisterOS. Терминал: python3 --version, затем pip3 install zxcvbn --break-system-packages, затем python3 pwd_audit_gui.py.",s6_q5:"Tor Browser и другие специальные браузеры?",s6_a5:"Tor Browser основан на Firefox — его CSV имеет тот же формат. Скрипт определяет его автоматически.",s6_q6:"Можно ли запускать аудит несколько раз?",s6_a6:"Да, сколько угодно раз. Файлы вывода перезаписываются каждый раз.",s6_q7:"Приемлема ли оценка надёжности \"Средняя\"?",s6_a7:"Для некритических сайтов оценка 2 (Средняя) приемлема в краткосрочной перспективе. Для email, банка, хостинга: стремись к оценке 4 (Очень надёжный).",
+footer1:"Password Audit Guide · локальный файл · данные не передаются",footer2:"Используй это руководство с pwd_audit_gui.py",,
+code_win_check:"# должно показать Python 3.x.x",
+code_mac_check:"# если нет: brew install python3",
+code_run_win:"# Windows",
+code_run_nix:"# macOS / Linux / Raspi"
+};
+
+T['zh']={
+guide_tag:"可视化指南 · 入门级",subtitle:"逐步导出、清理并将所有密码导入 Proton Pass。",
+nav_overview:"概述",nav_python:"安装 Python",nav_export:"导出 CSV",nav_run:"运行审计",nav_import:"导入 Proton Pass",nav_vaults:"整理 Vault",nav_faq:"常见问题",
+s0_label:"概述",s0_what_title:"🗺 我们要做什么",s0_what_body:"你的密码分散在 Chrome、Firefox、Opera、Safari、Vivaldi 中……有些已保存了 20 年。我们将合并所有内容、排序、评估每个密码的强度、检测失效站点——最后整洁地导入 Proton Pass。",
+s0_tools_title:"🧰 所需工具",s0_tools_python:"免费，如缺失则安装",s0_tools_zxcvbn:"密码强度评分，1 条命令",s0_tools_script:"本指南附带的脚本",s0_local_tip:"一切在本地运行——不会有任何密码发送到互联网。",
+s1_label:"第 1 步 — 安装 Python 和库",s1_win_desc:"1. 访问 python.org/downloads\n2. 下载 Python 3.12（黄色按钮）\n3. 运行安装程序 — 勾选 \"Add Python to PATH\"\n4. 打开 PowerShell 并输入：",s1_mac_desc:"新版 macOS 已预装 Python 3。\n打开终端（Spotlight → \"终端\"）：",s1_raspi_desc:"TwisterOS 已包含 Python 3。\n打开终端：",s1_check_title:"✅ 验证是否正常",s1_check_desc:"在终端中粘贴：",s1_check_result:"你应看到：zxcvbn OK\n如报错 → 重试 pip install",s1_win_warn:"在 Windows 上，如安装后未识别 python，请关闭并重新打开 PowerShell。或尝试用 py 代替 python。",
+s2_label:"第 2 步 — 从每个浏览器导出 CSV",s2_danger:"重要：导出的 CSV 以明文包含所有密码。请将其放入专用临时文件夹，并在导入 Proton Pass 后删除。",
+s2_chrome_path:"1. 在地址栏输入：chrome://password-manager/settings\n2. \"已保存的密码\" 部分\n3. 按钮 ⋮ → 导出密码\n4. 用 Windows/Mac 密码确认",s2_chrome_note:"Vivaldi、Opera、Chromium：通过 chrome://settings/passwords 操作相同",s2_firefox_path:"1. 在地址栏输入：about:logins\n2. 按钮 ⋯（右上角）\n3. 导出登录信息\n4. 用系统密码确认",s2_firefox_note:"Firefox 时间戳为 Unix 毫秒——脚本自动转换。",s2_safari_path:"1. Safari 菜单 → 设置\n2. 密码标签\n3. 认证（Touch ID 或 Mac 密码）\n4. 底部按钮 ⋯ → 导出所有密码\n5. 保存 Passwords.csv 文件",s2_safari_note:"⚠️ 导出前禁用 iCloud Drive 或 Time Machine。",s2_vivaldi_path:"1. Vivaldi 菜单 → 文件 → 导出密码\n— 或 — vivaldi://settings/privacy → 密码 → 导出",s2_vivaldi_note:"与 Chrome 格式相同——自动检测。",s2_opera_path:"1. 设置（Alt+P）\n2. 高级 → 安全\n3. 密码部分\n4. 导出密码",s2_opera_note:"与 Chrome Chromium 格式完全相同。",s2_proton_path:"1. 点击 Proton Pass 扩展\n2. 菜单 ☰ → 设置\n3. 导出标签 → 选择 CSV\n4. 点击导出 → 输入 Proton Pass 密码",s2_proton_note:"用于将现有 Proton Pass 导出与其他浏览器合并。",s2_folder_tip:"将所有 CSV 放在同一文件夹中，例如 Windows 上的 C:\\pwd_audit\\ 或 Mac/Linux 上的 ~/pwd_audit/。",
+s3_label:"第 3 步 — 运行 pwd_audit_gui.py",s3_step1_h:"复制脚本文件",s3_step1_p:"将 pwd_audit_gui.py 放在 CSV 所在文件夹或磁盘上任意位置。",s3_step2_h:"在该文件夹中打开终端",s3_step2_p:"Windows：Shift+右键 → \"在此处打开 PowerShell 窗口\"\nmacOS：右键文件夹 → \"新建位于文件夹位置的终端窗口\"\nLinux/Raspi：右键 → \"在终端中打开\"",s3_step3_h:"运行脚本",s3_step3_p:"弹出窗口 — 这就是图形界面。",s3_step4_h:"标签页 📂 CSV 文件",s3_step4_p:"点击 \"添加 CSV\" 并选择所有导出的文件。",s3_step5_h:"标签页 🔍 审计 → 启动",s3_step5_p:"选择输出文件夹。保持勾选 \"检查失效域名\"。点击 \"启动审计\"。预计时间：2–5 分钟。",
+s3_output_title:"📊 生成的文件",s3_output_clean:"passwords_clean.csv — 所有已排序条目，含强度评分和站点状态。这是导入 Proton Pass 的文件。",s3_output_dead:"sites_dead.csv — 未响应的域名。这些账户可能已过期。",s3_output_review:"sites_to_review.csv — 模糊域名（403、奇怪重定向）。手动检查。",
+s4_label:"第 4 步 — 导入 Proton Pass",s4_format_title:"🔑 Proton Pass 期望格式（Generic CSV）",s4_format_desc:"Proton Pass 接受包含以下列的 CSV（脚本自动生成）：",s4_col_col:"列",s4_col_req:"必填",s4_col_desc:"描述",s4_col_ex:"示例",s4_required:"必填",s4_required2:"必填",s4_required3:"必填",s4_required4:"必填",s4_optional:"可选",s4_optional2:"可选",s4_optional3:"可选",s4_optional4:"可选",s4_name_desc:"条目名称/标签",s4_url_desc:"站点完整 URL",s4_username_desc:"用户名",s4_password_desc:"密码",s4_email_desc:"关联邮箱",s4_note_desc:"自由备注",s4_totp_desc:"2FA 密钥（otpauth:// 格式）",s4_vault_desc:"目标 Vault",
+s4_step1_h:"打开 Proton Pass",s4_step1_p:"在浏览器中点击 Proton Pass 扩展 — 或访问 pass.proton.me",s4_step2_h:"设置 → 导入",s4_step2_p:"点击 ☰ 菜单 → 设置 → 导入部分",s4_step3_h:"选择 \"Generic CSV\"",s4_step3_p:"从来源列表中选择 Generic CSV。点击选择文件并选择 passwords_clean.csv。",s4_step4_h:"选择目标 Vault",s4_step4_p:"选择现有 Vault 或创建新的。之后可以重新整理。",s4_step5_h:"确认并验证",s4_step5_p:"点击导入。验证条目数量是否匹配。然后：从磁盘删除源 CSV。",s4_delete_warn:"导入后删除所有 CSV（导出的 + 生成的）。这些是包含所有密码的明文文件。",
+s5_label:"第 5 步 — 在 Proton Pass 中整理 Vault",s5_intro:"导入后，将账户分配到主题性 Vault 中：",s5_v_critical:"主邮箱、银行、Proton、托管、域名、GitHub",s5_v_work:"API、服务器、DNS、注册商、开发工具、托管",s5_v_personal:"社交媒体、购物、流媒体、日常服务",s5_v_old:"可疑账户、可能失效的站点，逐步检查",s5_v_shared:"家庭/团队共享访问",s5_labels_tip:"Proton Pass 中实用标签：2FA-enabled、pwd-to-change、pwd-reused、hibp-compromised",s5_strategy_title:"📅 密码更换策略",s5_strategy_intro:"不要一次性全部更改——你会放弃的。渐进式方法：",s5_week1:"🔴 第 1 周：仅 Critical（邮箱、银行、Proton 本身）",s5_week2:"🟡 第 2–3 周：活跃站点上评分 0–1 的账户",s5_ongoing:"🔄 持续进行：每次登录时 → 让 Proton Pass 生成新的强密码（20+ 字符）",
+s6_label:"常见问题",s6_q1:"脚本会窃取我的密码吗？",s6_a1:"不会。脚本完全在本地运行。除检查域名（非密码）是否响应外，不发出任何网络请求。",s6_q2:"我的 CSV 未被识别——怎么办？",s6_a2:"脚本自动检测 Chrome/Firefox。如果 CSV 列名不同，用 Excel 打开并将列重命名为 name、url、username、password。",s6_q3:"为什么一些活跃站点显示为 \"dead\"？",s6_a3:"约 20–30% 的检查会出现误报。站点可能屏蔽爬虫（403）、网络超时或使用 Cloudflare。",s6_q4:"如何在 Raspberry Pi TwisterOS 上安装 Python？",s6_a4:"Python 3 已安装在 TwisterOS 上。打开终端：python3 --version，然后 pip3 install zxcvbn --break-system-packages，然后 python3 pwd_audit_gui.py。",s6_q5:"Tor Browser 和其他特殊浏览器？",s6_a5:"Tor Browser 基于 Firefox——其 CSV 格式相同。脚本自动检测。",s6_q6:"可以多次运行审计吗？",s6_a6:"可以，想运行多少次都行。每次都会覆盖输出文件。",s6_q7:"\"中等\" 强度评分可以接受吗？",s6_a7:"对于非关键站点，评分 2（中等）短期内可接受。对于邮箱、银行、托管：目标是评分 4（非常强）。",
+footer1:"Password Audit Guide · 本地文件 · 不传输任何数据",footer2:"与 pwd_audit_gui.py 一起使用本指南",,
+code_win_check:"# 应显示 Python 3.x.x",
+code_mac_check:"# 若缺失: brew install python3",
+code_run_win:"# Windows",
+code_run_nix:"# macOS / Linux / Raspi"
+};
+
+T['ja']={
+guide_tag:"ビジュアルガイド · 初心者向け",subtitle:"すべてのパスワードをエクスポート、クリーニングして Proton Pass にインポート — ステップバイステップ。",
+nav_overview:"概要",nav_python:"Python をインストール",nav_export:"CSV をエクスポート",nav_run:"監査を実行",nav_import:"Proton Pass にインポート",nav_vaults:"Vault を整理",nav_faq:"よくある質問",
+s0_label:"概要",s0_what_title:"🗺 行うこと",s0_what_body:"Chrome、Firefox、Opera、Safari、Vivaldi にパスワードが散らばっています……20 年前のものもあるかもしれません。すべてをマージ、並べ替え、各パスワードの強度を評価し、死んだサイトを検出して、Proton Pass にきれいにインポートします。",
+s0_tools_title:"🧰 必要なツール",s0_tools_python:"無料、なければインストール",s0_tools_zxcvbn:"パスワード強度スコアリング、コマンド 1 つ",s0_tools_script:"このガイドに付属のスクリプト",s0_local_tip:"すべてがローカルで実行されます — パスワードはインターネットに送信されません。",
+s1_label:"ステップ 1 — Python とライブラリをインストール",s1_win_desc:"1. python.org/downloads にアクセス\n2. Python 3.12 をダウンロード\n3. インストーラを実行 — \"Add Python to PATH\" にチェック\n4. PowerShell を開いて入力：",s1_mac_desc:"最新の macOS には Python 3 が既にインストールされています。\nターミナルを開く（Spotlight → \"ターミナル\"）：",s1_raspi_desc:"Python 3 は TwisterOS に含まれています。\nターミナルを開く：",s1_check_title:"✅ 動作確認",s1_check_desc:"ターミナルでコピーペースト：",s1_check_result:"zxcvbn OK と表示されるはずです\nエラーの場合 → pip install を再試行",s1_win_warn:"Windows でインストール後に python が認識されない場合、PowerShell を閉じて再度開いてください。または python の代わりに py を試してください。",
+s2_label:"ステップ 2 — 各ブラウザから CSV をエクスポート",s2_danger:"重要：エクスポートされた CSV にはパスワードが平文で含まれています。専用の一時フォルダに保存し、Proton Pass へのインポート後に削除してください。",
+s2_chrome_path:"1. アドレスバーに入力：chrome://password-manager/settings\n2. \"保存されたパスワード\" セクション\n3. ⋮ ボタン → パスワードをエクスポート\n4. Windows/Mac のパスワードで確認",s2_chrome_note:"Vivaldi、Opera、Chromium：chrome://settings/passwords から同じ手順",s2_firefox_path:"1. アドレスバーに入力：about:logins\n2. ⋯ ボタン（右上）\n3. ログイン情報をエクスポート\n4. システムパスワードで確認",s2_firefox_note:"Firefox のタイムスタンプは Unix ミリ秒 — スクリプトが自動変換します。",s2_safari_path:"1. Safari メニュー → 設定\n2. パスワードタブ\n3. 認証（Touch ID または Mac パスワード）\n4. 下部の ⋯ ボタン → すべてのパスワードをエクスポート\n5. Passwords.csv を保存",s2_safari_note:"⚠️ エクスポート前に iCloud Drive または Time Machine を無効にしてください。",s2_vivaldi_path:"1. Vivaldi メニュー → ファイル → パスワードをエクスポート\n— または — vivaldi://settings/privacy → パスワード → エクスポート",s2_vivaldi_note:"Chrome と同じ形式 — 自動検出されます。",s2_opera_path:"1. 設定（Alt+P）\n2. 詳細設定 → セキュリティ\n3. パスワードセクション\n4. パスワードをエクスポート",s2_opera_note:"Chrome Chromium の形式と同一。",s2_proton_path:"1. Proton Pass 拡張機能をクリック\n2. ☰ メニュー → 設定\n3. エクスポートタブ → CSV を選択\n4. エクスポートをクリック → Proton Pass パスワードを入力",s2_proton_note:"既存の Proton Pass エクスポートと他のブラウザを統合するのに便利。",s2_folder_tip:"すべての CSV を同じフォルダに入れてください（例：Windows なら C:\\pwd_audit\\、Mac/Linux なら ~/pwd_audit/）。",
+s3_label:"ステップ 3 — pwd_audit_gui.py を実行",s3_step1_h:"スクリプトファイルをコピー",s3_step1_p:"pwd_audit_gui.py を CSV と同じフォルダ、またはディスク上の任意の場所に配置。",s3_step2_h:"そのフォルダでターミナルを開く",s3_step2_p:"Windows：Shift+右クリック → \"PowerShell ウィンドウをここで開く\"\nmacOS：フォルダを右クリック → \"フォルダに新規ターミナル\"\nLinux/Raspi：右クリック → \"ターミナルで開く\"",s3_step3_h:"スクリプトを実行",s3_step3_p:"ウィンドウが開きます — グラフィカルインターフェースです。",s3_step4_h:"📂 CSV ファイル タブ",s3_step4_p:"\"CSV を追加\" をクリックして、エクスポートしたファイルをすべて選択。",s3_step5_h:"🔍 監査 → 開始 タブ",s3_step5_p:"出力フォルダを選択。オンラインなら \"死亡ドメインを確認\" にチェック。\"監査を開始\" をクリック。推定時間：2〜5 分。",
+s3_output_title:"📊 生成されたファイル",s3_output_clean:"passwords_clean.csv — 強度スコアとサイトステータス付きの全ソートエントリ。Proton Pass にインポートするファイル。",s3_output_dead:"sites_dead.csv — 応答しなかったドメイン。これらのアカウントはおそらく時代遅れ。",s3_output_review:"sites_to_review.csv — 曖昧なドメイン。手動で確認。",
+s4_label:"ステップ 4 — Proton Pass にインポート",s4_format_title:"🔑 Proton Pass の期待フォーマット（Generic CSV）",s4_format_desc:"Proton Pass はこれらの列を含む CSV を受け付けます（スクリプトが自動生成）：",s4_col_col:"列",s4_col_req:"必須",s4_col_desc:"説明",s4_col_ex:"例",s4_required:"必須",s4_required2:"必須",s4_required3:"必須",s4_required4:"必須",s4_optional:"任意",s4_optional2:"任意",s4_optional3:"任意",s4_optional4:"任意",s4_name_desc:"エントリ名/ラベル",s4_url_desc:"サイトの完全 URL",s4_username_desc:"ユーザー名",s4_password_desc:"パスワード",s4_email_desc:"関連メール",s4_note_desc:"自由メモ",s4_totp_desc:"2FA シークレット（otpauth:// 形式）",s4_vault_desc:"対象 Vault",
+s4_step1_h:"Proton Pass を開く",s4_step1_p:"ブラウザで Proton Pass 拡張機能をクリック — または pass.proton.me にアクセス",s4_step2_h:"設定 → インポート",s4_step2_p:"☰ メニュー → 設定 → インポートセクション",s4_step3_h:"\"Generic CSV\" を選択",s4_step3_p:"ソースリストから Generic CSV を選択。ファイルを選択をクリックして passwords_clean.csv を選択。",s4_step4_h:"対象 Vault を選択",s4_step4_p:"既存の Vault を選択するか、新しいものを作成。後で再整理できます。",s4_step5_h:"確認して検証",s4_step5_p:"インポートをクリック。エントリ数が一致するか確認。その後：ソース CSV をディスクから削除。",s4_delete_warn:"インポート後、すべての CSV（エクスポートしたもの + 生成されたもの）を削除。これらはすべてのパスワードを含む平文ファイルです。",
+s5_label:"ステップ 5 — Proton Pass で Vault を整理",s5_intro:"インポート後、アカウントをテーマ別 Vault に分配：",s5_v_critical:"メインメール、銀行、Proton、ホスティング、ドメイン、GitHub",s5_v_work:"API、サーバー、DNS、レジストラ、開発ツール、ホスティング",s5_v_personal:"SNS、ショッピング、ストリーミング、日常サービス",s5_v_old:"疑わしいアカウント、死亡の可能性があるサイト",s5_v_shared:"家族/チームの共有アクセス",s5_labels_tip:"Proton Pass で役立つラベル：2FA-enabled、pwd-to-change、pwd-reused、hibp-compromised",s5_strategy_title:"📅 パスワード変更戦略",s5_strategy_intro:"一度に全部変更しないこと — 挫折します。段階的なアプローチ：",s5_week1:"🔴 第 1 週：Critical のみ（メール、銀行、Proton 自体）",s5_week2:"🟡 第 2〜3 週：アクティブなサイトでスコア 0〜1 のアカウント",s5_ongoing:"🔄 継続的に：ログインするたびに → Proton Pass に新しい強力なパスワードを生成させる（20+ 文字）",
+s6_label:"よくある質問",s6_q1:"スクリプトがパスワードを盗む可能性は？",s6_a1:"ありません。スクリプトは完全にローカルで実行されます。ドメイン（パスワードではない）が応答するかどうかを確認する以外、ネットワークリクエストは行いません。",s6_q2:"CSV が認識されない場合は？",s6_a2:"スクリプトは Chrome/Firefox を自動検出します。CSV の列が異なる場合、Excel で開いて name、url、username、password に列名を変更してください。",s6_q3:"なぜアクティブなサイトが \"dead\" と表示されるのか？",s6_a3:"約 20〜30% の確認で誤検知が発生します。サイトがボットをブロック（403）、ネットワークタイムアウト、または Cloudflare を使用している可能性があります。",s6_q4:"Raspberry Pi TwisterOS に Python をインストールするには？",s6_a4:"Python 3 は TwisterOS に既にインストールされています。ターミナル：python3 --version、次に pip3 install zxcvbn --break-system-packages、次に python3 pwd_audit_gui.py。",s6_q5:"Tor Browser などの特殊ブラウザは？",s6_a5:"Tor Browser は Firefox ベース — CSV フォーマットは同じです。スクリプトが自動検出します。",s6_q6:"監査を複数回実行できますか？",s6_a6:"はい、何回でも。出力ファイルは毎回上書きされます。",s6_q7:"\"中程度\" の強度スコアは許容されますか？",s6_a7:"重要でないサイトでは、スコア 2（中程度）は短期的に許容されます。メール、銀行、ホスティングにはスコア 4（非常に強い）を目指してください。",
+footer1:"Password Audit Guide · ローカルファイル · データ送信なし",footer2:"このガイドは pwd_audit_gui.py と一緒に使用",,
+code_win_check:"# Python 3.x.x と表示されるはず",
+code_mac_check:"# なければ: brew install python3",
+code_run_win:"# Windows",
+code_run_nix:"# macOS / Linux / Raspi"
+};
+
+T['vi']={
+guide_tag:"Hướng Dẫn Trực Quan · Người Mới",subtitle:"Xuất, làm sạch và nhập tất cả mật khẩu vào Proton Pass — từng bước một.",
+nav_overview:"Tổng quan",nav_python:"Cài Python",nav_export:"Xuất CSV",nav_run:"Chạy kiểm tra",nav_import:"Nhập Proton Pass",nav_vaults:"Quản lý Vault",nav_faq:"Câu hỏi thường gặp",
+s0_label:"Tổng quan",s0_what_title:"🗺 Chúng ta sẽ làm gì",s0_what_body:"Bạn có mật khẩu rải rác trong Chrome, Firefox, Opera, Safari, Vivaldi… một số từ 20 năm trước. Chúng ta sẽ hợp nhất tất cả, sắp xếp, đánh giá độ mạnh của từng mật khẩu, phát hiện các trang web đã chết — và nhập tất cả vào Proton Pass.",
+s0_tools_title:"🧰 Công cụ cần thiết",s0_tools_python:"miễn phí, cài nếu chưa có",s0_tools_zxcvbn:"đánh giá độ mạnh mật khẩu, 1 lệnh",s0_tools_script:"script đi kèm hướng dẫn này",s0_local_tip:"Mọi thứ chạy cục bộ trên máy của bạn — không có mật khẩu nào được gửi qua internet.",
+s1_label:"Bước 1 — Cài Python và thư viện",s1_win_desc:"1. Truy cập python.org/downloads\n2. Tải Python 3.12\n3. Chạy cài đặt — đánh dấu \"Add Python to PATH\"\n4. Mở PowerShell và gõ:",s1_mac_desc:"Python 3 đã được cài sẵn trên macOS mới.\nMở Terminal (Spotlight → \"Terminal\"):",s1_raspi_desc:"Python 3 đã có trong TwisterOS.\nMở terminal:",s1_check_title:"✅ Kiểm tra hoạt động",s1_check_desc:"Trong terminal, dán vào:",s1_check_result:"Bạn sẽ thấy: zxcvbn OK\nNếu lỗi → thử lại pip install",s1_win_warn:"Trên Windows, nếu python không được nhận sau khi cài, đóng và mở lại PowerShell. Hoặc thử py thay vì python.",
+s2_label:"Bước 2 — Xuất CSV từ mỗi trình duyệt",s2_danger:"Quan trọng: CSV xuất ra chứa tất cả mật khẩu ở dạng văn bản thuần túy. Đặt chúng vào thư mục tạm riêng và xóa sau khi nhập vào Proton Pass.",
+s2_chrome_path:"1. Nhập vào thanh địa chỉ: chrome://password-manager/settings\n2. Phần \"Mật khẩu đã lưu\"\n3. Nút ⋮ → Xuất mật khẩu\n4. Xác nhận bằng mật khẩu Windows/Mac",s2_chrome_note:"Vivaldi, Opera, Chromium: thủ tục tương tự qua chrome://settings/passwords",s2_firefox_path:"1. Nhập: about:logins\n2. Nút ⋯ (góc trên phải)\n3. Xuất thông tin đăng nhập\n4. Xác nhận bằng mật khẩu hệ thống",s2_firefox_note:"Dấu thời gian Firefox tính bằng mili giây Unix — script tự động chuyển đổi.",s2_safari_path:"1. Menu Safari → Cài đặt\n2. Tab Mật khẩu\n3. Xác thực (Touch ID hoặc mật khẩu Mac)\n4. Nút ⋯ ở dưới → Xuất tất cả mật khẩu\n5. Lưu file Passwords.csv",s2_safari_note:"⚠️ Tắt iCloud Drive hoặc Time Machine trước khi xuất.",s2_vivaldi_path:"1. Menu Vivaldi → File → Xuất mật khẩu\n— HOẶC — vivaldi://settings/privacy → Mật khẩu → Xuất",s2_vivaldi_note:"Cùng định dạng Chrome — tự động phát hiện.",s2_opera_path:"1. Cài đặt (Alt+P)\n2. Nâng cao → Bảo mật\n3. Phần Mật khẩu\n4. Xuất mật khẩu",s2_opera_note:"Giống hệt định dạng Chrome Chromium.",s2_proton_path:"1. Nhấp vào tiện ích Proton Pass\n2. Menu ☰ → Cài đặt\n3. Tab Xuất → chọn CSV\n4. Nhấp Xuất → nhập mật khẩu Proton Pass",s2_proton_note:"Hữu ích để hợp nhất xuất Proton Pass hiện có với các trình duyệt khác.",s2_folder_tip:"Đặt tất cả CSV vào cùng một thư mục, ví dụ C:\\pwd_audit\\ trên Windows hoặc ~/pwd_audit/ trên Mac/Linux.",
+s3_label:"Bước 3 — Chạy pwd_audit_gui.py",s3_step1_h:"Sao chép file script",s3_step1_p:"Đặt pwd_audit_gui.py vào cùng thư mục với CSV, hoặc bất kỳ đâu trên ổ đĩa.",s3_step2_h:"Mở terminal trong thư mục đó",s3_step2_p:"Windows: Shift+nhấp phải → \"Mở cửa sổ PowerShell tại đây\"\nmacOS: nhấp phải vào thư mục → \"Terminal mới tại thư mục\"\nLinux/Raspi: nhấp phải → \"Mở trong Terminal\"",s3_step3_h:"Chạy script",s3_step3_p:"Một cửa sổ mở ra — đó là giao diện đồ họa.",s3_step4_h:"Tab 📂 File CSV",s3_step4_p:"Nhấp \"Thêm CSV\" và chọn tất cả file đã xuất.",s3_step5_h:"Tab 🔍 Kiểm tra → Bắt đầu",s3_step5_p:"Chọn thư mục đầu ra. Giữ chọn \"Kiểm tra tên miền chết\". Nhấp \"Bắt đầu Kiểm tra\". Thời gian ước tính: 2–5 phút.",
+s3_output_title:"📊 File được tạo",s3_output_clean:"passwords_clean.csv — tất cả mục đã sắp xếp với điểm mạnh và trạng thái site. Đây là file nhập vào Proton Pass.",s3_output_dead:"sites_dead.csv — tên miền không phản hồi. Các tài khoản này có thể đã lỗi thời.",s3_output_review:"sites_to_review.csv — tên miền không rõ ràng. Kiểm tra thủ công.",
+s4_label:"Bước 4 — Nhập vào Proton Pass",s4_format_title:"🔑 Định dạng Proton Pass yêu cầu (Generic CSV)",s4_format_desc:"Proton Pass chấp nhận CSV với các cột sau (script tự động tạo):",s4_col_col:"Cột",s4_col_req:"Bắt buộc",s4_col_desc:"Mô tả",s4_col_ex:"Ví dụ",s4_required:"Bắt buộc",s4_required2:"Bắt buộc",s4_required3:"Bắt buộc",s4_required4:"Bắt buộc",s4_optional:"Tùy chọn",s4_optional2:"Tùy chọn",s4_optional3:"Tùy chọn",s4_optional4:"Tùy chọn",s4_name_desc:"Tên/nhãn mục",s4_url_desc:"URL đầy đủ của site",s4_username_desc:"Tên người dùng",s4_password_desc:"Mật khẩu",s4_email_desc:"Email liên quan",s4_note_desc:"Ghi chú tự do",s4_totp_desc:"Bí mật 2FA (định dạng otpauth://)",s4_vault_desc:"Vault đích",
+s4_step1_h:"Mở Proton Pass",s4_step1_p:"Trong trình duyệt, nhấp vào tiện ích Proton Pass — hoặc truy cập pass.proton.me",s4_step2_h:"Cài đặt → Nhập",s4_step2_p:"Nhấp menu ☰ → Cài đặt → phần Nhập",s4_step3_h:"Chọn \"Generic CSV\"",s4_step3_p:"Từ danh sách nguồn, chọn Generic CSV. Nhấp Chọn file và chọn passwords_clean.csv.",s4_step4_h:"Chọn vault đích",s4_step4_p:"Chọn vault hiện có hoặc tạo mới. Bạn có thể sắp xếp lại sau.",s4_step5_h:"Xác nhận và kiểm tra",s4_step5_p:"Nhấp Nhập. Kiểm tra số mục có khớp không. Sau đó: xóa CSV nguồn khỏi ổ đĩa.",s4_delete_warn:"Xóa tất cả CSV (xuất + tạo) sau khi nhập. Đây là file văn bản thuần chứa tất cả mật khẩu.",
+s5_label:"Bước 5 — Tổ chức Vault trong Proton Pass",s5_intro:"Sau khi nhập, phân phối tài khoản vào các vault theo chủ đề:",s5_v_critical:"Email chính, ngân hàng, Proton, hosting, tên miền, GitHub",s5_v_work:"API, máy chủ, DNS, registrar, công cụ dev, hosting",s5_v_personal:"Mạng xã hội, mua sắm, streaming, dịch vụ hàng ngày",s5_v_old:"Tài khoản đáng ngờ, site có thể chết, kiểm tra dần",s5_v_shared:"Truy cập chung gia đình/nhóm",s5_labels_tip:"Nhãn hữu ích trong Proton Pass: 2FA-enabled, pwd-to-change, pwd-reused, hibp-compromised",s5_strategy_title:"📅 Chiến lược thay đổi mật khẩu",s5_strategy_intro:"Đừng thay đổi tất cả cùng lúc — bạn sẽ bỏ cuộc. Phương pháp tiến bộ:",s5_week1:"🔴 Tuần 1: Chỉ Critical (email, ngân hàng, Proton)",s5_week2:"🟡 Tuần 2–3: Tài khoản điểm 0–1 trên các site hoạt động",s5_ongoing:"🔄 Liên tục: Mỗi lần đăng nhập → để Proton Pass tạo mật khẩu mới mạnh (20+ ký tự)",
+s6_label:"Câu hỏi thường gặp",s6_q1:"Script có thể đánh cắp mật khẩu không?",s6_a1:"Không. Script chạy hoàn toàn cục bộ. Không có yêu cầu mạng nào ngoài việc kiểm tra xem các tên miền (không phải mật khẩu) có phản hồi không.",s6_q2:"CSV của tôi không được nhận dạng — phải làm gì?",s6_a2:"Script tự động phát hiện Chrome/Firefox. Nếu CSV có cột khác, mở bằng Excel và đổi tên cột thành name, url, username, password.",s6_q3:"Tại sao một số site đang hoạt động lại hiển thị là \"dead\"?",s6_a3:"Khoảng 20–30% kiểm tra cho kết quả dương tính giả. Site có thể chặn bot (403), có timeout mạng, hoặc dùng Cloudflare.",s6_q4:"Cách cài Python trên Raspberry Pi TwisterOS?",s6_a4:"Python 3 đã được cài trên TwisterOS. Mở terminal: python3 --version, rồi pip3 install zxcvbn --break-system-packages, rồi python3 pwd_audit_gui.py.",s6_q5:"Tor Browser và các trình duyệt đặc biệt khác?",s6_a5:"Tor Browser dựa trên Firefox — CSV có cùng định dạng. Script tự động phát hiện.",s6_q6:"Có thể chạy kiểm tra nhiều lần không?",s6_a6:"Có, bao nhiêu lần tùy thích. File đầu ra bị ghi đè mỗi lần.",s6_q7:"Điểm mạnh \"Trung bình\" có chấp nhận được không?",s6_a7:"Với site không quan trọng, điểm 2 (Trung bình) chấp nhận được ngắn hạn. Với email, ngân hàng, hosting: nhắm đến điểm 4 (Rất mạnh).",
+footer1:"Password Audit Guide · file cục bộ · không truyền dữ liệu",footer2:"Dùng hướng dẫn này với pwd_audit_gui.py",,
+code_win_check:"# phải hiển thị Python 3.x.x",
+code_mac_check:"# nếu thiếu: brew install python3",
+code_run_win:"# Windows",
+code_run_nix:"# macOS / Linux / Raspi"
+};
+
+T['th']={
+guide_tag:"คู่มือภาพ · สำหรับผู้เริ่มต้น",subtitle:"ส่งออก ทำความสะอาด และนำเข้ารหัสผ่านทั้งหมดสู่ Proton Pass — ทีละขั้นตอน",
+nav_overview:"ภาพรวม",nav_python:"ติดตั้ง Python",nav_export:"ส่งออก CSV",nav_run:"เรียกใช้การตรวจสอบ",nav_import:"นำเข้า Proton Pass",nav_vaults:"จัดการ Vault",nav_faq:"คำถามที่พบบ่อย",
+s0_label:"ภาพรวม",s0_what_title:"🗺 สิ่งที่เราจะทำ",s0_what_body:"คุณมีรหัสผ่านกระจายอยู่ใน Chrome, Firefox, Opera, Safari, Vivaldi… บางส่วนมีอายุถึง 20 ปี เราจะรวมทุกอย่าง จัดเรียง ประเมินความแข็งแกร่ง ตรวจหาไซต์ที่ตายแล้ว และนำเข้าทุกอย่างสู่ Proton Pass อย่างสะอาด",
+s0_tools_title:"🧰 เครื่องมือที่จำเป็น",s0_tools_python:"ฟรี ติดตั้งหากขาด",s0_tools_zxcvbn:"การให้คะแนนความแข็งแกร่ง 1 คำสั่ง",s0_tools_script:"สคริปต์ที่รวมอยู่ในคู่มือนี้",s0_local_tip:"ทุกอย่างทำงานในเครื่องของคุณ — ไม่มีรหัสผ่านถูกส่งทางอินเทอร์เน็ต",
+s1_label:"ขั้นตอนที่ 1 — ติดตั้ง Python และไลบรารี",s1_win_desc:"1. ไปที่ python.org/downloads\n2. ดาวน์โหลด Python 3.12\n3. รันตัวติดตั้ง — เลือก \"Add Python to PATH\"\n4. เปิด PowerShell และพิมพ์:",s1_mac_desc:"Python 3 ติดตั้งไว้แล้วบน macOS รุ่นใหม่\nเปิด Terminal (Spotlight → \"Terminal\"):",s1_raspi_desc:"Python 3 รวมอยู่ใน TwisterOS\nเปิด terminal:",s1_check_title:"✅ ตรวจสอบว่าทำงานได้",s1_check_desc:"ใน terminal ให้วางข้อความ:",s1_check_result:"คุณควรเห็น: zxcvbn OK\nหากมีข้อผิดพลาด → ลอง pip install ใหม่",s1_win_warn:"บน Windows หากไม่รู้จัก python หลังติดตั้ง ให้ปิดและเปิด PowerShell ใหม่ หรือลอง py แทน python",
+s2_label:"ขั้นตอนที่ 2 — ส่งออก CSV จากแต่ละเบราว์เซอร์",s2_danger:"สำคัญ: CSV ที่ส่งออกมีรหัสผ่านทั้งหมดในรูปแบบข้อความธรรมดา ใส่ไว้ในโฟลเดอร์ชั่วคราวแยกต่างหาก และลบหลังนำเข้าสู่ Proton Pass",
+s2_chrome_path:"1. พิมพ์ในแถบที่อยู่: chrome://password-manager/settings\n2. ส่วน \"รหัสผ่านที่บันทึก\"\n3. ปุ่ม ⋮ → ส่งออกรหัสผ่าน\n4. ยืนยันด้วยรหัสผ่าน Windows/Mac",s2_chrome_note:"Vivaldi, Opera, Chromium: ขั้นตอนเดียวกันผ่าน chrome://settings/passwords",s2_firefox_path:"1. พิมพ์: about:logins\n2. ปุ่ม ⋯ (มุมขวาบน)\n3. ส่งออกข้อมูลเข้าสู่ระบบ\n4. ยืนยันด้วยรหัสผ่านระบบ",s2_firefox_note:"timestamps ของ Firefox เป็น Unix milliseconds — สคริปต์แปลงอัตโนมัติ",s2_safari_path:"1. เมนู Safari → การตั้งค่า\n2. แท็บรหัสผ่าน\n3. ยืนยันตัวตน (Touch ID หรือรหัสผ่าน Mac)\n4. ปุ่ม ⋯ ด้านล่าง → ส่งออกรหัสผ่านทั้งหมด\n5. บันทึกไฟล์ Passwords.csv",s2_safari_note:"⚠️ ปิดใช้งาน iCloud Drive หรือ Time Machine ก่อนส่งออก",s2_vivaldi_path:"1. เมนู Vivaldi → ไฟล์ → ส่งออกรหัสผ่าน\n— หรือ — vivaldi://settings/privacy → รหัสผ่าน → ส่งออก",s2_vivaldi_note:"รูปแบบเดียวกับ Chrome — ตรวจจับอัตโนมัติ",s2_opera_path:"1. การตั้งค่า (Alt+P)\n2. ขั้นสูง → ความปลอดภัย\n3. ส่วนรหัสผ่าน\n4. ส่งออกรหัสผ่าน",s2_opera_note:"เหมือนกับรูปแบบ Chrome Chromium",s2_proton_path:"1. คลิกที่ส่วนขยาย Proton Pass\n2. เมนู ☰ → การตั้งค่า\n3. แท็บส่งออก → เลือก CSV\n4. คลิกส่งออก → ใส่รหัสผ่าน Proton Pass",s2_proton_note:"มีประโยชน์สำหรับรวมการส่งออก Proton Pass ที่มีอยู่กับเบราว์เซอร์อื่น",s2_folder_tip:"วาง CSV ทั้งหมดไว้ในโฟลเดอร์เดียวกัน เช่น C:\\pwd_audit\\ บน Windows หรือ ~/pwd_audit/ บน Mac/Linux",
+s3_label:"ขั้นตอนที่ 3 — เรียกใช้ pwd_audit_gui.py",s3_step1_h:"คัดลอกไฟล์สคริปต์",s3_step1_p:"วาง pwd_audit_gui.py ในโฟลเดอร์เดียวกับ CSV หรือที่ใดก็ได้บนดิสก์",s3_step2_h:"เปิด terminal ในโฟลเดอร์นั้น",s3_step2_p:"Windows: Shift+คลิกขวา → \"เปิดหน้าต่าง PowerShell ที่นี่\"\nmacOS: คลิกขวาโฟลเดอร์ → \"Terminal ใหม่ที่โฟลเดอร์\"\nLinux/Raspi: คลิกขวา → \"เปิดใน Terminal\"",s3_step3_h:"เรียกใช้สคริปต์",s3_step3_p:"หน้าต่างเปิดขึ้น — นั่นคืออินเทอร์เฟซกราฟิก",s3_step4_h:"แท็บ 📂 ไฟล์ CSV",s3_step4_p:"คลิก \"เพิ่ม CSV\" และเลือกไฟล์ที่ส่งออกทั้งหมด",s3_step5_h:"แท็บ 🔍 การตรวจสอบ → เริ่ม",s3_step5_p:"เลือกโฟลเดอร์เอาต์พุต เปิดตัวเลือก \"ตรวจสอบโดเมนที่ตาย\" ไว้ คลิก \"เริ่มการตรวจสอบ\" เวลาโดยประมาณ: 2–5 นาที",
+s3_output_title:"📊 ไฟล์ที่สร้าง",s3_output_clean:"passwords_clean.csv — รายการที่เรียงลำดับทั้งหมดพร้อมคะแนนความแข็งแกร่งและสถานะไซต์ นี่คือไฟล์ที่นำเข้าสู่ Proton Pass",s3_output_dead:"sites_dead.csv — โดเมนที่ไม่ตอบสนอง บัญชีเหล่านี้อาจล้าสมัยแล้ว",s3_output_review:"sites_to_review.csv — โดเมนที่ไม่ชัดเจน ตรวจสอบด้วยตนเอง",
+s4_label:"ขั้นตอนที่ 4 — นำเข้าสู่ Proton Pass",s4_format_title:"🔑 รูปแบบที่ Proton Pass คาดหวัง (Generic CSV)",s4_format_desc:"Proton Pass ยอมรับ CSV ที่มีคอลัมน์เหล่านี้พอดี (สคริปต์สร้างอัตโนมัติ):",s4_col_col:"คอลัมน์",s4_col_req:"จำเป็น",s4_col_desc:"คำอธิบาย",s4_col_ex:"ตัวอย่าง",s4_required:"จำเป็น",s4_required2:"จำเป็น",s4_required3:"จำเป็น",s4_required4:"จำเป็น",s4_optional:"ไม่บังคับ",s4_optional2:"ไม่บังคับ",s4_optional3:"ไม่บังคับ",s4_optional4:"ไม่บังคับ",s4_name_desc:"ชื่อ/ป้ายกำกับรายการ",s4_url_desc:"URL เต็มของไซต์",s4_username_desc:"ชื่อผู้ใช้",s4_password_desc:"รหัสผ่าน",s4_email_desc:"อีเมลที่เกี่ยวข้อง",s4_note_desc:"บันทึกอิสระ",s4_totp_desc:"ความลับ 2FA (รูปแบบ otpauth://)",s4_vault_desc:"Vault ปลายทาง",
+s4_step1_h:"เปิด Proton Pass",s4_step1_p:"ในเบราว์เซอร์ คลิกที่ส่วนขยาย Proton Pass — หรือไปที่ pass.proton.me",s4_step2_h:"การตั้งค่า → นำเข้า",s4_step2_p:"คลิกเมนู ☰ → การตั้งค่า → ส่วนนำเข้า",s4_step3_h:"เลือก \"Generic CSV\"",s4_step3_p:"จากรายการแหล่งที่มา เลือก Generic CSV คลิกเลือกไฟล์และเลือก passwords_clean.csv",s4_step4_h:"เลือก Vault ปลายทาง",s4_step4_p:"เลือก Vault ที่มีอยู่หรือสร้างใหม่ คุณสามารถจัดระเบียบใหม่ในภายหลัง",s4_step5_h:"ยืนยันและตรวจสอบ",s4_step5_p:"คลิกนำเข้า ตรวจสอบว่าจำนวนรายการตรงกัน จากนั้น: ลบ CSV ต้นฉบับออกจากดิสก์",s4_delete_warn:"ลบ CSV ทั้งหมด (ส่งออก + สร้าง) หลังนำเข้า เป็นไฟล์ข้อความธรรมดาที่มีรหัสผ่านทั้งหมด",
+s5_label:"ขั้นตอนที่ 5 — จัดระเบียบ Vault ใน Proton Pass",s5_intro:"หลังนำเข้า แจกจ่ายบัญชีเป็น Vault ตามหัวข้อ:",s5_v_critical:"อีเมลหลัก ธนาคาร Proton โฮสติ้ง โดเมน GitHub",s5_v_work:"API เซิร์ฟเวอร์ DNS registrars เครื่องมือ dev โฮสติ้ง",s5_v_personal:"โซเชียลมีเดีย การช้อปปิ้ง สตรีมมิ่ง บริการประจำวัน",s5_v_old:"บัญชีที่น่าสงสัย ไซต์ที่อาจตายแล้ว ตรวจสอบทีละน้อย",s5_v_shared:"การเข้าถึงร่วมกัน ครอบครัว/ทีม",s5_labels_tip:"ป้ายกำกับที่มีประโยชน์ใน Proton Pass: 2FA-enabled, pwd-to-change, pwd-reused, hibp-compromised",s5_strategy_title:"📅 กลยุทธ์การเปลี่ยนรหัสผ่าน",s5_strategy_intro:"อย่าเปลี่ยนทุกอย่างพร้อมกัน — คุณจะยอมแพ้ แนวทางแบบค่อยเป็นค่อยไป:",s5_week1:"🔴 สัปดาห์ที่ 1: เฉพาะ Critical (อีเมล ธนาคาร Proton เอง)",s5_week2:"🟡 สัปดาห์ที่ 2–3: บัญชีที่มีคะแนน 0–1 บนไซต์ที่ใช้งาน",s5_ongoing:"🔄 ต่อเนื่อง: ทุกครั้งที่เข้าสู่ระบบ → ให้ Proton Pass สร้างรหัสผ่านใหม่ที่แข็งแกร่ง (20+ อักขระ)",
+s6_label:"คำถามที่พบบ่อย",s6_q1:"สคริปต์สามารถขโมยรหัสผ่านได้ไหม?",s6_a1:"ไม่ สคริปต์ทำงานในเครื่องทั้งหมด ไม่มีคำขอเครือข่ายใดๆ นอกจากตรวจสอบว่าโดเมน (ไม่ใช่รหัสผ่าน) ตอบสนองหรือไม่",s6_q2:"CSV ของฉันไม่ถูกจดจำ — ต้องทำอะไร?",s6_a2:"สคริปต์ตรวจจับ Chrome/Firefox อัตโนมัติ หาก CSV มีคอลัมน์ต่างกัน ให้เปิดใน Excel และเปลี่ยนชื่อคอลัมน์เป็น name, url, username, password",s6_q3:"ทำไมบางไซต์ที่ใช้งานอยู่ปรากฏเป็น \"dead\"?",s6_a3:"ประมาณ 20–30% ของการตรวจสอบให้ผลบวกปลอม ไซต์อาจบล็อกบอท (403) มี network timeout หรือใช้ Cloudflare",s6_q4:"วิธีติดตั้ง Python บน Raspberry Pi TwisterOS?",s6_a4:"Python 3 ติดตั้งไว้แล้วใน TwisterOS เปิด terminal: python3 --version, จากนั้น pip3 install zxcvbn --break-system-packages, จากนั้น python3 pwd_audit_gui.py",s6_q5:"Tor Browser และเบราว์เซอร์พิเศษอื่นๆ?",s6_a5:"Tor Browser อิงจาก Firefox — CSV มีรูปแบบเดียวกัน สคริปต์ตรวจจับอัตโนมัติ",s6_q6:"สามารถเรียกใช้การตรวจสอบหลายครั้งได้ไหม?",s6_a6:"ได้ กี่ครั้งก็ได้ ไฟล์เอาต์พุตถูกเขียนทับทุกครั้ง",s6_q7:"คะแนนความแข็งแกร่ง \"ปานกลาง\" ยอมรับได้ไหม?",s6_a7:"สำหรับไซต์ที่ไม่สำคัญ คะแนน 2 (ปานกลาง) ยอมรับได้ในระยะสั้น สำหรับอีเมล ธนาคาร โฮสติ้ง: มุ่งเป้าคะแนน 4 (แข็งแกร่งมาก)",
+footer1:"Password Audit Guide · ไฟล์ในเครื่อง · ไม่ส่งข้อมูล",footer2:"ใช้คู่มือนี้กับ pwd_audit_gui.py",,
+code_win_check:"# ควรแสดง Python 3.x.x",
+code_mac_check:"# ถ้าไม่มี: brew install python3",
+code_run_win:"# Windows",
+code_run_nix:"# macOS / Linux / Raspi"
+};
+
+T['km']={
+guide_tag:"មគ្គុទ្ទេសក៍រូបភាព · អ្នកចាប់ផ្ដើម",subtitle:"នាំចេញ សម្អាត និងនាំចូលពាក្យសម្ងាត់ទាំងអស់ទៅ Proton Pass — មួយជំហានម្ដង។",
+nav_overview:"ទិដ្ឋភាពទូទៅ",nav_python:"ដំឡើង Python",nav_export:"នាំចេញ CSV",nav_run:"ដំណើរការពិនិត្យ",nav_import:"នាំចូល Proton Pass",nav_vaults:"រៀបចំ Vault",nav_faq:"សំណួរញឹកញាប់",
+s0_label:"ទិដ្ឋភាពទូទៅ",s0_what_title:"🗺 អ្វីដែលយើងនឹងធ្វើ",s0_what_body:"អ្នកមានពាក្យសម្ងាត់ប្រតិចារឹកនៅក្នុង Chrome, Firefox, Opera, Safari, Vivaldi… ខ្លះមានអាយុ 20 ឆ្នាំ។ យើងនឹងបញ្ចូលគ្នា តម្រៀប វាស់ភាពខ្លាំង ស្វែងរកគេហទំព័រដែលស្លាប់ — ហើយនាំចូលទាំងអស់ទៅ Proton Pass។",
+s0_tools_title:"🧰 ឧបករណ៍ចាំបាច់",s0_tools_python:"ឥតគិតថ្លៃ ដំឡើងប្រសិនបើអវត្ដមាន",s0_tools_zxcvbn:"ការផ្ដល់ពិន្ទុភាពខ្លាំង 1 ពាក្យបញ្ជា",s0_tools_script:"script ដែលភ្ជាប់ជាមួយមគ្គុទ្ទេសក៍នេះ",s0_local_tip:"ទាំងអស់ដំណើរការក្នុងម៉ាស៊ីនរបស់អ្នក — គ្មានពាក្យសម្ងាត់ណាត្រូវបញ្ជូនតាមអ៊ីនធឺណិត។",
+s1_label:"ជំហានទី 1 — ដំឡើង Python និងបណ្ណាល័យ",s1_win_desc:"1. ចូល python.org/downloads\n2. ទាញយក Python 3.12\n3. ដំណើរការកម្មវិធីដំឡើង — ដាក់សញ្ញាធីក \"Add Python to PATH\"\n4. បើក PowerShell ហើយវាយ:",s1_mac_desc:"Python 3 ដំឡើងរួចហើយនៅ macOS ថ្មី។\nបើក Terminal (Spotlight → \"Terminal\"):",s1_raspi_desc:"Python 3 រួមបញ្ចូលក្នុង TwisterOS ។\nបើក terminal:",s1_check_title:"✅ ពិនិត្យថាដំណើរការ",s1_check_desc:"ក្នុង terminal ចម្លងបិទភ្ជាប់:",s1_check_result:"អ្នកគួរឃើញ: zxcvbn OK\nប្រសិនបើមានកំហុស → សាកល្បង pip install ម្ដងទៀត",s1_win_warn:"នៅ Windows ប្រសិនបើ python មិនត្រូវបានទទួលស្គាល់ក្រោយការដំឡើង សូមបិទ ហើយបើក PowerShell ឡើងវិញ។ ឬសាកល្បង py ជំនួស python។",
+s2_label:"ជំហានទី 2 — នាំចេញ CSV ពីកម្មវិធីរុករក",s2_danger:"សំខាន់: CSV ដែលនាំចេញមានពាក្យសម្ងាត់ទាំងអស់ក្នុងទម្រង់អក្សរធម្មតា។ ដាក់វានៅក្នុងថតបណ្ដោះអាសន្នដែលបានកំណត់ ហើយលុបបន្ទាប់ពីនាំចូលទៅ Proton Pass។",
+s2_chrome_path:"1. វាយក្នុងរបារអាសយដ្ឋាន: chrome://password-manager/settings\n2. ផ្នែក \"ពាក្យសម្ងាត់ដែលបានរក្សាទុក\"\n3. ប៊ូតុង ⋮ → នាំចេញពាក្យសម្ងាត់\n4. បញ្ជាក់ជាមួយពាក្យសម្ងាត់ Windows/Mac",s2_chrome_note:"Vivaldi, Opera, Chromium: នីតិវិធីដូចគ្នាតាម chrome://settings/passwords",s2_firefox_path:"1. វាយ: about:logins\n2. ប៊ូតុង ⋯ (ខាងស្ដាំខាងលើ)\n3. នាំចេញព័ត៌មានចូល\n4. បញ្ជាក់ជាមួយពាក្យសម្ងាត់ប្រព័ន្ធ",s2_firefox_note:"Timestamps Firefox គឺជា Unix milliseconds — script បំប្លែងដោយស្វ័យប្រវត្តិ។",s2_safari_path:"1. ម៉ឺនុយ Safari → ការកំណត់\n2. ផ្ទាំងពាក្យសម្ងាត់\n3. ផ្ទៀងផ្ទាត់ (Touch ID ឬពាក្យសម្ងាត់ Mac)\n4. ប៊ូតុង ⋯ ខាងក្រោម → នាំចេញពាក្យសម្ងាត់ទាំងអស់\n5. រក្សាទុកឯកសារ Passwords.csv",s2_safari_note:"⚠️ បិទ iCloud Drive ឬ Time Machine មុននាំចេញ។",s2_vivaldi_path:"1. ម៉ឺនុយ Vivaldi → ឯកសារ → នាំចេញពាក្យសម្ងាត់\n— ឬ — vivaldi://settings/privacy → ពាក្យសម្ងាត់ → នាំចេញ",s2_vivaldi_note:"ទ្រង់ទ្រាយដូច Chrome — ត្រូវបានស្វែងរកដោយស្វ័យប្រវត្តិ។",s2_opera_path:"1. ការកំណត់ (Alt+P)\n2. កម្រិតខ្ពស់ → សុវត្ថិភាព\n3. ផ្នែកពាក្យសម្ងាត់\n4. នាំចេញពាក្យសម្ងាត់",s2_opera_note:"ដូចគ្នាជាមួយទ្រង់ទ្រាយ Chrome Chromium។",s2_proton_path:"1. ចុចលើកម្មវិធីបន្ថែម Proton Pass\n2. ម៉ឺនុយ ☰ → ការកំណត់\n3. ផ្ទាំងនាំចេញ → ជ្រើស CSV\n4. ចុចនាំចេញ → បញ្ចូលពាក្យសម្ងាត់ Proton Pass",s2_proton_note:"មានប្រយោជន៍សម្រាប់បញ្ចូលទិន្នន័យ Proton Pass ដែលមានស្រាប់ជាមួយកម្មវិធីរុករកផ្សេងទៀត។",s2_folder_tip:"ដាក់ CSV ទាំងអស់ក្នុងថតតែមួយ ឧទាហរណ៍ C:\\pwd_audit\\ ក្នុង Windows ឬ ~/pwd_audit/ ក្នុង Mac/Linux។",
+s3_label:"ជំហានទី 3 — ដំណើរការ pwd_audit_gui.py",s3_step1_h:"ចម្លងឯកសារ script",s3_step1_p:"ដាក់ pwd_audit_gui.py ក្នុងថតដូចគ្នានឹង CSV ឬនៅទីណាក៏បាន ក្នុងថាស។",s3_step2_h:"បើក terminal ក្នុងថតនោះ",s3_step2_p:"Windows: Shift+ចុចស្ដាំ → \"បើកបង្អួច PowerShell នៅទីនេះ\"\nmacOS: ចុចស្ដាំលើថត → \"Terminal ថ្មីនៅថត\"\nLinux/Raspi: ចុចស្ដាំ → \"បើកក្នុង Terminal\"",s3_step3_h:"ដំណើរការ script",s3_step3_p:"បង្អួចបើក — នោះគឺជាចំណុចប្រទាក់រូបភាព។",s3_step4_h:"ផ្ទាំង 📂 ឯកសារ CSV",s3_step4_p:"ចុច \"បន្ថែម CSV\" ហើយជ្រើសរើសឯកសារដែលនាំចេញទាំងអស់។",s3_step5_h:"ផ្ទាំង 🔍 ការពិនិត្យ → ចាប់ផ្ដើម",s3_step5_p:"ជ្រើសថតលទ្ធផល។ ទុករបស់ \"ពិនិត្យដែន dead\" ។ ចុច \"ចាប់ផ្ដើមការពិនិត្យ\" ។ ពេលវេលា: 2–5 នាទី។",
+s3_output_title:"📊 ឯកសារដែលបានបង្កើត",s3_output_clean:"passwords_clean.csv — ធាតុដែលបានតម្រៀបទាំងអស់ជាមួយពិន្ទុភាពខ្លាំង។ នេះគឺជាឯកសារដែលត្រូវនាំចូលទៅ Proton Pass។",s3_output_dead:"sites_dead.csv — ដែនដែលមិនឆ្លើយតប។ គណនីទាំងនេះប្រហែលជាហួសសម័យ។",s3_output_review:"sites_to_review.csv — ដែនមិនច្បាស់លាស់។ ពិនិត្យដោយដៃ។",
+s4_label:"ជំហានទី 4 — នាំចូលទៅ Proton Pass",s4_format_title:"🔑 ទ្រង់ទ្រាយដែល Proton Pass ត្រូវការ (Generic CSV)",s4_format_desc:"Proton Pass ទទួលយក CSV ដែលមានជួរឈរទាំងនេះ (script បង្កើតដោយស្វ័យប្រវត្តិ):",s4_col_col:"ជួរឈរ",s4_col_req:"ចាំបាច់",s4_col_desc:"ការពណ៌នា",s4_col_ex:"ឧទាហរណ៍",s4_required:"ចាំបាច់",s4_required2:"ចាំបាច់",s4_required3:"ចាំបាច់",s4_required4:"ចាំបាច់",s4_optional:"ស្រេចចិត្ត",s4_optional2:"ស្រេចចិត្ត",s4_optional3:"ស្រេចចិត្ត",s4_optional4:"ស្រេចចិត្ត",s4_name_desc:"ឈ្មោះ/ស្លាករបស់ធាតុ",s4_url_desc:"URL ពេញលេញ",s4_username_desc:"ឈ្មោះអ្នកប្រើ",s4_password_desc:"ពាក្យសម្ងាត់",s4_email_desc:"អ៊ីមែលដែលពាក់ព័ន្ធ",s4_note_desc:"កំណត់ចំណាំ",s4_totp_desc:"អាថ៌កំបាំង 2FA (ទ្រង់ទ្រាយ otpauth://)",s4_vault_desc:"Vault គោលដៅ",
+s4_step1_h:"បើក Proton Pass",s4_step1_p:"ក្នុងកម្មវិធីរុករក ចុចលើកម្មវិធីបន្ថែម Proton Pass — ឬចូល pass.proton.me",s4_step2_h:"ការកំណត់ → នាំចូល",s4_step2_p:"ចុចម៉ឺនុយ ☰ → ការកំណត់ → ផ្នែកនាំចូល",s4_step3_h:"ជ្រើស \"Generic CSV\"",s4_step3_p:"ពីបញ្ជីប្រភព ជ្រើស Generic CSV ។ ចុចជ្រើសឯកសារ ហើយជ្រើស passwords_clean.csv ។",s4_step4_h:"ជ្រើស Vault គោលដៅ",s4_step4_p:"ជ្រើស Vault ដែលមានស្រាប់ ឬបង្កើតថ្មី។ អ្នកអាចរៀបចំឡើងវិញនៅពេលក្រោយ។",s4_step5_h:"បញ្ជាក់ ហើយពិនិត្យ",s4_step5_p:"ចុចនាំចូល។ ពិនិត្យថាចំនួនធាតុត្រូវគ្នា។ បន្ទាប់មក: លុប CSV ប្រភពពីថាស។",s4_delete_warn:"លុប CSV ទាំងអស់ (ដែលនាំចេញ + បានបង្កើត) ក្រោយការនាំចូល។ ទាំងនេះជាឯកសារអក្សរធម្មតាដែលមានពាក្យសម្ងាត់ទាំងអស់។",
+s5_label:"ជំហានទី 5 — រៀបចំ Vault ក្នុង Proton Pass",s5_intro:"ក្រោយការនាំចូល ចែកចាយគណនីទៅ Vault តាមប្រធានបទ:",s5_v_critical:"អ៊ីមែលសំខាន់ ធនាគារ Proton ហោស្ទីង ដែន GitHub",s5_v_work:"API ម៉ាស៊ីនមេ DNS registrars ឧបករណ៍ dev ហោស្ទីង",s5_v_personal:"ប្រព័ន្ធផ្សព្វផ្សាយសង្គម ការទិញ ស្ទ្រីមីង សេវាប្រចាំថ្ងៃ",s5_v_old:"គណនីគួរសង្ស័យ គេហទំព័រដែលប្រហែលស្លាប់ ពិនិត្យបន្ទើរៗ",s5_v_shared:"ការចូលរួមគ្រួសារ/ក្រុម",s5_labels_tip:"ស្លាកដែលមានប្រយោជន៍ក្នុង Proton Pass: 2FA-enabled, pwd-to-change, pwd-reused, hibp-compromised",s5_strategy_title:"📅 យុទ្ធសាស្ត្រផ្លាស់ប្ដូរពាក្យសម្ងាត់",s5_strategy_intro:"កុំផ្លាស់ប្ដូរទាំងអស់ក្នុងពេលតែមួយ — អ្នកនឹងបោះបង់។ វិធីសាស្ត្របន្ទើរ:",s5_week1:"🔴 សប្ដាហ៍ទី 1: Critical ប៉ុណ្ណោះ (អ៊ីមែល ធនាគារ Proton ខ្លួនឯង)",s5_week2:"🟡 សប្ដាហ៍ទី 2–3: គណនីដែលមានពិន្ទុ 0–1 នៅលើគេហទំព័រសកម្ម",s5_ongoing:"🔄 បន្ត: រាល់ពេលចូល → ឱ្យ Proton Pass បង្កើតពាក្យសម្ងាត់ខ្លាំងថ្មី (20+ តួអក្សរ)",
+s6_label:"សំណួរញឹកញាប់",s6_q1:"តើ script អាចលួចពាក្យសម្ងាត់ខ្ញុំបានទេ?",s6_a1:"ទេ។ Script ដំណើរការក្នុងម៉ាស៊ីនទាំងស្រុង។ វាមិនបញ្ជូនសំណើណាមួយទៅបណ្តាញ លើកលែងតែពិនិត្យថាដែន (មិនមែនពាក្យសម្ងាត់) ឆ្លើយតបឬអត់។",s6_q2:"CSV ខ្ញុំមិនត្រូវបានស្គាល់ — ត្រូវធ្វើអ្វី?",s6_a2:"Script ស្វែងរក Chrome/Firefox ដោយស្វ័យប្រវត្តិ។ ប្រសិនបើ CSV មានជួរឈរខុសគ្នា ចូរបើកក្នុង Excel ហើយប្ដូរឈ្មោះជួរឈរទៅ name, url, username, password។",s6_q3:"ហេតុអ្វីគេហទំព័រដែលសកម្មខ្លះបង្ហាញ \"dead\"?",s6_a3:"ប្រហែល 20–30% នៃការពិនិត្យឱ្យលទ្ធផលវិជ្ជមានមិនពិត។ គេហទំព័រអាចបដិសេធ bot (403) មាន network timeout ឬប្រើ Cloudflare។",s6_q4:"របៀបដំឡើង Python ក្នុង Raspberry Pi TwisterOS?",s6_a4:"Python 3 ដំឡើងរួចហើយក្នុង TwisterOS។ Terminal: python3 --version, បន្ទាប់មក pip3 install zxcvbn --break-system-packages, បន្ទាប់មក python3 pwd_audit_gui.py។",s6_q5:"Tor Browser និងកម្មវិធីរុករកពិសេសផ្សេងទៀត?",s6_a5:"Tor Browser ផ្អែកលើ Firefox — CSV របស់វាមានទ្រង់ទ្រាយដូចគ្នា។ Script ស្វែងរកដោយស្វ័យប្រវត្តិ។",s6_q6:"អាចដំណើរការការពិនិត្យច្រើនដងបានទេ?",s6_a6:"បាន ច្រើនដងតាមចិត្ត។ ឯកសារលទ្ធផលត្រូវបានសរសេរជំនួសរាល់ពេល។",s6_q7:"តើពិន្ទុភាពខ្លាំង \"មធ្យម\" ទទួលយកបានទេ?",s6_a7:"សម្រាប់គេហទំព័រមិនសំខាន់ ពិន្ទុ 2 (មធ្យម) ទទួលយកបានក្នុងអំឡុងពេលខ្លី។ សម្រាប់អ៊ីមែល ធនាគារ ហោស្ទីង: ងើបឡើងដល់ពិន្ទុ 4 (ខ្លាំងណាស់)។",
+footer1:"Password Audit Guide · ឯកសារក្នុងម៉ាស៊ីន · មិនផ្ញើទិន្នន័យ",footer2:"ប្រើមគ្គុទ្ទេសក៍នេះជាមួយ pwd_audit_gui.py",,
+code_win_check:"# គួរបង្ហាញ Python 3.x.x",
+code_mac_check:"# ប្រសិនបើខ្វះ: brew install python3",
+code_run_win:"# Windows",
+code_run_nix:"# macOS / Linux / Raspi"
+};
+
+// ═══ ENGINE ═══
+let currentLang='fr';
+
+function detectBrowserLang(){
+  const nav=(navigator.language||navigator.userLanguage||'fr').slice(0,2).toLowerCase();
+  const map={fr:'fr',en:'en',es:'es',de:'de',it:'it',pt:'pt',ru:'ru',zh:'zh',ja:'ja',vi:'vi',th:'th',km:'km'};
+  return map[nav]||'en';
+}
+
+function applyLang(code){
+  if(!T[code])return;
+  currentLang=code;
+  const t=T[code];
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const k=el.getAttribute('data-i18n');
+    if(t[k]!==undefined)el.textContent=t[k];
+  });
+  document.documentElement.lang=code;
+  const lang=LANGS.find(l=>l.code===code);
+  if(lang){
+    document.getElementById('currentFlag').textContent=lang.flag;
+    document.getElementById('currentName').textContent=lang.name;
+  }
+  localStorage.setItem('pwd_audit_lang',code);
+  document.querySelectorAll('.lang-option').forEach(o=>o.classList.toggle('active',o.dataset.code===code));
+}
+
+function buildDropdown(){
+  const dd=document.getElementById('langDropdown');
+  LANGS.forEach(l=>{
+    const div=document.createElement('div');
+    div.className='lang-option'+(l.code===currentLang?' active':'');
+    div.dataset.code=l.code;
+    div.innerHTML='<span class="flag">'+l.flag+'</span><span>'+l.name+'</span>';
+    div.onclick=()=>{applyLang(l.code);closeLangMenu();};
+    dd.appendChild(div);
+  });
+}
+
+function toggleLangMenu(){
+  document.getElementById('langBtn').classList.toggle('open');
+  document.getElementById('langDropdown').classList.toggle('open');
+}
+function closeLangMenu(){
+  document.getElementById('langBtn').classList.remove('open');
+  document.getElementById('langDropdown').classList.remove('open');
+}
+document.addEventListener('click',e=>{if(!e.target.closest('.lang-selector'))closeLangMenu();});
+
+function toggleFaq(btn){
+  const a=btn.nextElementSibling,isOpen=a.classList.contains('open');
+  document.querySelectorAll('.faq-a').forEach(x=>x.classList.remove('open'));
+  document.querySelectorAll('.faq-q').forEach(x=>x.classList.remove('open'));
+  if(!isOpen){a.classList.add('open');btn.classList.add('open');}
+}
+
+document.querySelectorAll('.nav-pill').forEach(pill=>{
+  pill.addEventListener('click',e=>{
+    e.preventDefault();
+    const t=document.querySelector(pill.getAttribute('href'));
+    if(t)t.scrollIntoView({behavior:'smooth',block:'start'});
+  });
+});
+
+buildDropdown();
+const saved=localStorage.getItem('pwd_audit_lang');
+applyLang(saved||detectBrowserLang());
+</script>
+</html>
