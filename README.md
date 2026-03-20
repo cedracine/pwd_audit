@@ -7,7 +7,9 @@
 A local Python/Tkinter GUI that fuses CSV exports from Chrome, Firefox, Opera, Vivaldi, Safari, Brave and Proton Pass, scores password strength, detects dead domains, and outputs a clean CSV ready to import.
 
 **100% local. No data leaves your machine.**
+## Download
 
+[![Download ZIP](https://img.shields.io/github/v/release/cedracine/pwd_audit?label=Download&style=for-the-badge)](https://github.com/cedracine/pwd_audit/releases/latest/download/pwd_audit_package.zip)
 ---
 
 ## Features
