@@ -162,4 +162,4 @@ MIT — see [LICENSE](LICENSE)
 ## Acknowledgements
 
 - [zxcvbn](https://github.com/dwolfhub/zxcvbn-python) — password strength estimator
-- [Proton Pass](https://proton.me/pass) — the password manager this tool targets
+- [Proton Pass](https://pr.tn/ref/8BRHXXZC) — the password manager this tool targets
